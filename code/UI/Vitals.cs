@@ -5,6 +5,7 @@ public class Vitals : Panel
 {
 	public Panel HealthBar;
 	public Panel bar;
+	public Panel Border;
 
 	public Vitals()
 	{
@@ -12,6 +13,7 @@ public class Vitals : Panel
 
 		HealthBar = Add.Panel("HealthBar");
 		bar = HealthBar.Add.Panel( "bar" );
+		Border = Add.Panel( "border" );
 	}
 
 	public override void Tick()
@@ -22,7 +24,9 @@ public class Vitals : Panel
 		bar.SetClass( "human", player.BLCurTeam == BLPawn.BLTeams.Human || player.BLCurTeam == BLPawn.BLTeams.Hunter );
 		bar.SetClass( "vampire", player.BLCurTeam == BLPawn.BLTeams.Vampire );
 
-		bar.Style.Height = Length.Percent( player.Health.CeilToInt() );
+		Border.SetClass( "human", player.BLCurTeam == BLPawn.BLTeams.Human || player.BLCurTeam == BLPawn.BLTeams.Hunter );
+		Border.SetClass( "vampire", player.BLCurTeam == BLPawn.BLTeams.Vampire );
 
+		bar.Style.Height = Length.Percent( player.Health.CeilToInt() );
 	}
 }
