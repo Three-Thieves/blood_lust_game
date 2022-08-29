@@ -7,6 +7,8 @@ using Sandbox;
 
 public partial class BLGame : Game
 {
+	public static BLGame GameCurrent => Current as BLGame;
+
 	public static GameStates CurrentState => (Current as BLGame)?.GameState ?? GameStates.Idle;
 
 	public int MaxRounds { get; private set; } = 8;
@@ -18,81 +20,14 @@ public partial class BLGame : Game
 	public RealTimeUntil StateTimer { get; set; } = 0f;
 
 	[Net]
-	public GameStates GameState { get; set; } = GameStates.Idle;
+	public GameStates GameState { get; set; } = GameStates.Waiting;
 
 	[Net]
 	public string NextMap { get; set; } = "facepunch.construct";
 
-	private async Task WaitStateTimer()
-	{
-		while ( StateTimer > 0 || GameState == GameStates.Idle )
-		{
-			await Task.DelayRealtimeSeconds( 1.0f );
-		}
-
-		// extra second for fun
-		await Task.DelayRealtimeSeconds( 1.0f );
-	}
-
-	private async Task BLGameLoopAsync()
-	{
-		await WaitStateTimer();
-
-		GameState = GameStates.Start;
-		StateTimer = 10.0f;
-		Log.Info( "Updated state to Start" );
-		await WaitStateTimer();
-
-		Log.Info( "Updated state to Active" );
-		GameState = GameStates.Active;
-		StateTimer = 5 * 60;
-		await WaitStateTimer();
-
-		Log.Info( "Updated state to Post" );
-		GameState = GameStates.Post;
-		StateTimer = 10.0f;
-		CurRound++;
-
-		if ( CurRound >= MaxRounds )
-		{
-			Log.Info( "ROUNDS EXCEED MAX, starting map vote" );
-			GameState = GameStates.MapVote;
-
-			var mapVote = new MapVoteEntity();
-			mapVote.VoteTimeLeft = 10.0f;
-			StateTimer = mapVote.VoteTimeLeft;
-			await WaitStateTimer();
-
-			Global.ChangeLevel( mapVote.WinningMap );
-		}
-	}
-	
-	/*private async Task GameLoopAsync()
-	{
-		GameState = GameStates.Idle;
-		StateTimer = 10;
-		await WaitStateTimer();
-
-		GameState = GameStates.Active;
-		StateTimer = 5 * 60;
-		await WaitStateTimer();
-
-		GameState = GameStates.Post;
-		StateTimer = 10.0f;
-		await WaitStateTimer();
-
-		GameState = GameStates.MapVote;
-
-		var mapVote = new MapVoteEntity();
-		mapVote.VoteTimeLeft = 10.0f;
-		StateTimer = mapVote.VoteTimeLeft;
-		await WaitStateTimer();
-
-		Global.ChangeLevel( mapVote.WinningMap );
-	}*/
-
 	public enum GameStates
 	{
+		Waiting,
 		Idle,
 		Start,
 		Active,

@@ -1,7 +1,8 @@
 ﻿using Sandbox;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using SandboxEditor;
 
-[Library( "bl_fangs", Title = "Fangs" )]
+[Library( "bl_fangs" )]
 [HideInEditor]
 partial class Fangs : BLWeaponsBase
 {

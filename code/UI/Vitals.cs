@@ -1,13 +1,15 @@
 ﻿using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
-public class HealthHud : Panel
+public class Vitals : Panel
 {
-	public Image HealthBar;
+	public Panel HealthBar;
 
-	public HealthHud()
+	public Vitals()
 	{
-		HealthBar = Add.Image( "ui/healthbar_human.png", "healthhud");
+		StyleSheet.Load( "UI/Styles/vitalbar.scss" );
+
+		HealthBar = Add.Panel("bar");
 	}
 
 	public override void Tick()
@@ -15,7 +17,10 @@ public class HealthHud : Panel
 		var player = Local.Pawn as BLPawn;
 		if ( player == null ) return;
 
-		HealthBar.Style.Height = Length.Percent( player.Health );
+		HealthBar.SetClass( "human", player.BLCurTeam == BLPawn.BLTeams.Human || player.BLCurTeam == BLPawn.BLTeams.Hunter );
+		HealthBar.SetClass( "vampire", player.BLCurTeam == BLPawn.BLTeams.Vampire );
+
+		HealthBar.Style.Height = Length.Percent( player.Health.CeilToInt() );
 
 	}
 }

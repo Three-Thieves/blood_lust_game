@@ -1,0 +1,25 @@
+﻿vitals {
+    position: absolute;
+    width: 100%;
+    height: 30%;
+
+    .bar {
+        border: 2px solid black;
+        height: 64px;
+        transform: rotateX(180);
+        background-position: bottom;
+
+        &.human {
+            background-image: url(ui/healthbar_human.png);
+            background-repeat: no-repeat;
+            //width: 256px;
+        }
+
+        &.vampire {
+            background-image: url(ui/healthbar_vampire.png);
+            background-repeat: no-repeat;
+            width: 256px;
+            height: 64px;
+        }
+    }
+}

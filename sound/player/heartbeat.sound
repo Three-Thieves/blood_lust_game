@@ -2,16 +2,18 @@
 {
 	data = 
 	{
-		UI = false
+		UI = true
 		Volume = 1
 		VolumeRandom = 0
 		Pitch = 1
 		PitchRandom = 0
-		DistanceMax = 360
+		Decibels = 20
 		Sounds = 
 		[
 			resource:"sound/raw/heartbeat.vsnd",
 		]
 		SelectionMode = 3
+		MaximumDistance = 122.77009
+		MinimumDistance = 6.138505
 	}
 }

@@ -1,9 +1,10 @@
 ﻿using Sandbox;
-using System.ComponentModel.DataAnnotations;
-
-[Library( "bl_stake", Title = "Stake" )]
+using System.ComponentModel;
+using SandboxEditor;
+[Title("Stake"), Category("BL Weapons"), Icon("weapon")]
+[Library( "bl_stake" )]
 [EditorModel( "models/weapons/w_stake.vmdl" )]
-[Display( Name = "Stake" )]
+[HammerEntity]
 partial class Stake : BLWeaponsBase
 {
 	public static Model WorldModel = Model.Load( "models/weapons/w_stake.vmdl" );
@@ -52,6 +53,28 @@ partial class Stake : BLWeaponsBase
 				.WithWeapon( this );
 
 			tr.Entity.TakeDamage( damageInfo );
+
+			if ( tr.Entity is BLRagdoll ragdoll && IsServer )
+			{
+				if ( ragdoll.CorpseTeam == BLPawn.BLTeams.Vampire )
+				{
+					Sound.FromEntity( "vampiremaledeath", ragdoll );
+
+					foreach ( var client in Client.All )
+					{
+						if ( ragdoll.CorpseOwner.Client == client && client.Pawn is BLPawn deadVamp )
+						{
+							deadVamp.UpdatePlayerTeam( BLPawn.BLTeams.Spectator );
+							BLGame.GameCurrent.CheckRoundStatus();
+						}
+					}
+				}
+
+				var ply = Owner as BLPawn;
+				ply.Inventory.GetSlot( ply.Inventory.GetActiveSlot() ).Delete();
+
+				return;
+			}
 		}
 		ViewModelEntity?.SetAnimParameter( "attack_has_hit", true );
 		ViewModelEntity?.SetAnimParameter( "attack", true );

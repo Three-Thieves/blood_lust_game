@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 using Sandbox;
+using SandboxEditor;
 
-[Library( "bl_doublebarrel", Title = "Double Barrel Shotgun" )]
-[EditorModel( "weapons/rust_pumpshotgun/rust_pumpshotgun.vmdl" )]
-[Display( Name = "Double Barrel Shotgun" )]
+[Title( "Double Barrel Shotgun" ), Category("BL Weapons"), Icon("weapon")]
+[Library( "bl_doublebarrel") ]
+[EditorModel( "models/weapons/w_doublebarrel.vmdl" )]
+[HammerEntity]
 partial class DoubleBarrel : BLWeaponsBase
 {
 	public static readonly Model WorldModel = Model.Load( "models/weapons/w_doublebarrel.vmdl" );

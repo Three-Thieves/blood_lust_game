@@ -9,6 +9,7 @@ public partial class BLPawn : Player
 {
 	public enum BLTeams
 	{
+		Unknown,
 		Spectator,
 		Human,
 		Hunter,

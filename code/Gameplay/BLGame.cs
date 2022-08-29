@@ -8,20 +8,39 @@ using System.Threading.Tasks;
 
 public partial class BLGame : Game
 {
-	[Net]
-	BLHud Hud { get; set; }
 
 	public BLGame()
 	{
 		if(IsServer)
 		{
-			_ = BLGameLoopAsync();
+			
 		}
 
 		if(IsClient)
 		{
-			Hud = new BLHud();
+			_ = new BLHud();
 		}
+	}
+
+	public override void DoPlayerSuicide( Client cl )
+	{
+		return;
+	}
+
+	[Event.Hotload]
+	public void Hotload()
+	{
+		if ( IsClient )
+		{
+			_ = new BLHud();
+		}
+	}
+
+	public override void ClientDisconnect( Client cl, NetworkDisconnectionReason reason )
+	{
+		base.ClientDisconnect( cl, reason );
+
+		CheckRoundStatus();
 	}
 
 	public override void ClientJoined( Client client )
@@ -33,9 +52,10 @@ public partial class BLGame : Game
 
 		pawn.Spawn();
 
-		if( HasEnoughPlayers() )
+		if ( HasEnoughPlayers() && GameState == GameStates.Waiting )
 		{
-			GameState = GameStates.Start;
+			StateTimer = 10;
+			GameState = GameStates.Idle;
 		}
 	}
 }
