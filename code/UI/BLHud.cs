@@ -22,6 +22,7 @@ public class BLHud : RootPanel
 
 		AddChild<Scoreboard<ScoreboardEntry>>();
 		AddChild<Vitals>();
+		AddChild<Crosshair>();
 	}
 
 	public override void Tick()

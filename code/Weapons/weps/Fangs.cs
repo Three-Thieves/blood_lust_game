@@ -7,7 +7,7 @@ using SandboxEditor;
 partial class Fangs : BLWeaponsBase
 {
 	public static Model WorldModel = null;
-	public override string ViewModelPath => "";
+	public override string ViewModelPath => "models/first_person/first_person_arms.vmdl";
 	public override float PrimaryRate => 2.0f;
 	public override float SecondaryRate => 1.0f;
 	public override float ReloadTime => 3.0f;
@@ -30,35 +30,38 @@ partial class Fangs : BLWeaponsBase
 		TimeSincePrimaryAttack = 0;
 		TimeSinceSecondaryAttack = 0;
 
-		Rand.SetSeed( Time.Tick );
+		MeleeAttack();
+	}
 
+	private bool MeleeAttack()
+	{
 		var forward = Owner.EyeRotation.Forward;
-		forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * 0.1f;
 		forward = forward.Normal;
 
-		foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * 70, 15 ) )
-		{
-			tr.Surface.DoBulletImpact( tr );
+		bool hit = false;
 
-			if ( !IsServer ) continue;
+		foreach ( var tr in TraceBullet( Owner.EyePosition, Owner.EyePosition + forward * 80, 20.0f ) )
+		{
 			if ( !tr.Entity.IsValid() ) continue;
 
-			var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 32, 25 )
-				.UsingTraceResult( tr )
-				.WithAttacker( Owner )
-				.WithWeapon( this );
+			tr.Surface.DoBulletImpact( tr );
 
-			tr.Entity.TakeDamage( damageInfo );
+			hit = true;
+
+			if ( !IsServer ) continue;
+
+			using ( Prediction.Off() )
+			{
+				var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100, 25 )
+					.UsingTraceResult( tr )
+					.WithAttacker( Owner )
+					.WithWeapon( this );
+
+				tr.Entity.TakeDamage( damageInfo );
+			}
 		}
 
-		ViewModelEntity?.SetAnimParameter( "attack_has_hit", true );
-		ViewModelEntity?.SetAnimParameter( "attack", true );
-		ViewModelEntity?.SetAnimParameter( "holdtype_attack", false ? 2 : 1 );
-
-		if ( Owner is BLPawn player )
-		{
-			player.SetAnimParameter( "b_attack", true );
-		}
+		return hit;
 	}
 
 	public override void SimulateAnimator( PawnAnimator anim )

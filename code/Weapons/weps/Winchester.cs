@@ -2,26 +2,29 @@
 using Sandbox;
 using SandboxEditor;
 
-[Title( "Double Barrel Shotgun" ), Category("BL Weapons"), Icon("weapon")]
-[Library( "bl_doublebarrel") ]
-[EditorModel( "models/weapons/w_doublebarrel.vmdl" )]
+[Title( "Winchester Rifle" ), Category( "BL Weapons" ), Icon( "weapon" )]
+[Library( "bl_rifle" )]
+[EditorModel( "models/weapons/w_rifle.vmdl" )]
 [HammerEntity]
-partial class DoubleBarrel : BLWeaponsBase
+partial class Winchester : BLWeaponsBase
 {
-	public static readonly Model WorldModel = Model.Load( "models/weapons/w_doublebarrel.vmdl" );
-	public override string ViewModelPath => "models/weapons/v_doublebarrel.vmdl";
-	public override float PrimaryRate => 1;
-	public override float SecondaryRate => 1;
-	public override AmmoType AmmoType => AmmoType.Buckshot;
-	public override int ClipSize => 2;
+	public static readonly Model WorldModel = Model.Load( "models/weapons/w_rifle.vmdl" );
+	public override string ViewModelPath => "models/weapons/v_rifle.vmdl";
+	public override float PrimaryRate => 0.95f;
+	public override float SecondaryRate => -1;
+	public override AmmoType AmmoType => AmmoType.Rifle;
+	public override int ClipSize => 14;
 	public override float ReloadTime => 1.5f;
 	public override int Bucket => 2;
 	public override int BucketWeight => 200;
 
+	[Net, Predicted]
+	public bool StopReloading { get; set; }
+
 	public override void Spawn()
 	{
 		base.Spawn();
-
+		
 		Model = WorldModel;
 		AmmoClip = ClipSize;
 	}
@@ -30,6 +33,8 @@ partial class DoubleBarrel : BLWeaponsBase
 	{
 		base.Simulate( owner );
 
+		if ( IsReloading && Input.Pressed( InputButton.PrimaryAttack ) )
+			StopReloading = true;
 	}
 
 	public override void AttackPrimary()
@@ -59,32 +64,12 @@ partial class DoubleBarrel : BLWeaponsBase
 		//
 		// Shoot the bullets
 		//
-		ShootBullet( 0.2f, 0.3f, 20.0f, 2.0f, 4 );
+		ShootBullet( 0.05f, 0.3f, 45.0f, 2.0f );
 	}
 
 	public override void AttackSecondary()
 	{
-		TimeSincePrimaryAttack = -0.5f;
-		TimeSinceSecondaryAttack = -0.5f;
-
-		if ( !TakeAmmo( 2 ) )
-		{
-			DryFire();
-			return;
-		}
-
-		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
-
-		//
-		// Tell the clients to play the shoot effects
-		//
-		DoubleShootEffects();
-		PlaySound( "rust_pumpshotgun.shootdouble" );
-
-		//
-		// Shoot the bullets
-		//
-		ShootBullet( 0.4f, 0.3f, 20.0f, 2.0f, 8 );
+		
 	}
 
 	[ClientRpc]
@@ -98,21 +83,11 @@ partial class DoubleBarrel : BLWeaponsBase
 		ViewModelEntity?.SetAnimParameter( "fire", true );
 	}
 
-	[ClientRpc]
-	protected virtual void DoubleShootEffects()
-	{
-		Host.AssertClient();
-
-		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
-
-		ViewModelEntity?.SetAnimParameter( "fire_double", true );
-	}
-
 	public override void OnReloadFinish()
 	{
-		//var stop = StopReloading;
+		var stop = StopReloading;
 
-		//StopReloading = false;
+		StopReloading = false;
 		IsReloading = false;
 
 		TimeSincePrimaryAttack = 0;
@@ -129,7 +104,7 @@ partial class DoubleBarrel : BLWeaponsBase
 
 			AmmoClip += ammo;
 
-			if ( AmmoClip < ClipSize )
+			if ( AmmoClip < ClipSize && !stop )
 			{
 				Reload();
 			}

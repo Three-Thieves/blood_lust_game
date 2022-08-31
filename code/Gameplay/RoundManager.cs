@@ -58,7 +58,7 @@ public partial class BLGame : Game
 		All.OfType<BLPawn>().ToList().ForEach( x =>
 		{
 			x.ClearAmmo();
-			x.Inventory.DeleteContents();
+			x.Backpack.DeleteContents();
 			x.Respawn();
 		} );
 
@@ -134,7 +134,6 @@ public partial class BLGame : Game
 
 		if ( GameState == GameStates.Active )
 		{
-			GameState = GameStates.Post;
 			EndRound( WinningEnum.Humanity );
 		}
 
@@ -150,8 +149,16 @@ public partial class BLGame : Game
 		else
 			Log.Info( $"{ winningTeam } win");
 
+		switch(winningTeam)
+		{
+			case WinningEnum.Humanity:
+				PlayGameplaySounds( To.Everyone, "roundwin_humanity" );
+				break;
 
-		Log.Info( "Updated state to Post" );
+			case WinningEnum.Vampires:
+				PlayGameplaySounds( To.Everyone, "roundwin_vampire" );
+				break;
+		}
 
 		StateTimer = 10;
 		GameState = GameStates.Post;
@@ -164,7 +171,7 @@ public partial class BLGame : Game
 
 		CurRound++;
 
-		if ( CurRound >= MaxRounds && IsServer )
+		/*if ( CurRound >= MaxRounds && IsServer )
 		{
 			Log.Info( "ROUNDS EXCEED MAX, starting map vote" );
 			GameState = GameStates.MapVote;
@@ -174,7 +181,7 @@ public partial class BLGame : Game
 
 			StateTimer = mapVote.VoteTimeLeft;
 			Global.ChangeLevel( mapVote.WinningMap );
-		}
+		}*/
 	}
 
 	private bool HasEnoughPlayers()

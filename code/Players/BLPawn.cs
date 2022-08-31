@@ -1,36 +1,31 @@
 ﻿using Sandbox;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 
 partial class BLPawn : Player
 {
-	[Net, Local, Predicted]
-	bool flashlightToggle { get; set; } = false;
-
-	[Net, Local]
-	SpotLightEntity light { get; set; }
-
 	ClothingContainer container = new();
 
-	TimeSince timeToggleFlash;
-
 	TimeSince timeSinceDropped;
-
 	DamageInfo lastDMGInfo;
-
 	TimeUntil timeUntilResurrection;
 
 	float timeToResurrect = 15.0f;
 
 	[Net]
 	public float MaxHealth { get; set; } = 100;
-
 	public bool SupressPickupNotices { get; private set; }
+
+	public BLInventory Backpack { get; protected set; }
+
+	[Net]
+	List<BLWeaponsBase> wepList { get; set; }
 
 	public BLPawn()
 	{
-		Inventory = new BLInventory( this );
+		Backpack = new BLInventory( this );
 	}
 
 	public BLPawn( Client cl ) : this()
@@ -69,6 +64,7 @@ partial class BLPawn : Player
 			EnableAllCollisions = false;
 		}
 
+		CreatePlayerFlashlight();
 		BLGame.Current?.MoveToSpawnpoint( this );
 	}
 
@@ -77,13 +73,11 @@ partial class BLPawn : Player
 		base.Respawn();
 
 		CameraMode = new FirstPersonCamera();
-		if ( light.IsValid() )
-		{
-			flashlightToggle = false;
-			light.Enabled = false;
-			light.Delete();
-			light = null;
-		}
+		
+		if ( wFlash.IsValid )
+			DeleteFlashlight();
+
+		CreatePlayerFlashlight();
 
 		if ( BLGame.CurrentState == BLGame.GameStates.Active )
 		{
@@ -96,7 +90,6 @@ partial class BLPawn : Player
 			EnableAllCollisions = true;
 			container.DressEntity( this );
 		}
-
 	}
 
 	public void Resurrect()
@@ -147,64 +140,23 @@ partial class BLPawn : Player
 			return;
 		}
 
+		//SelectWeapon();
 		if ( Input.ActiveChild != null )
 		{
 			ActiveChild = Input.ActiveChild;
 		}
 
 		TickPlayerUse();
-
-		if(Input.Pressed(InputButton.Flashlight) && timeToggleFlash > 0.3f)
-		{
-			flashlightToggle = !flashlightToggle;
-			timeToggleFlash = 0;
-
-			switch (flashlightToggle)
-			{
-				case true:
-					if ( IsServer )
-					{
-						light = new SpotLightEntity
-						{
-							Enabled = true,
-							DynamicShadows = true,
-							Range = 512,
-							Falloff = 1.0f,
-							LinearAttenuation = 0.0f,
-							QuadraticAttenuation = 1.0f,
-							Brightness = 3,
-							Color = Color.White,
-							InnerConeAngle = 15,
-							OuterConeAngle = 55,
-							FogStrength = 1.0f,
-							Owner = Owner,
-							LightCookie = Texture.Load( "materials/effects/lightcookie.vtex" )
-						};
-					}
-					break;
-
-				case false:
-					if(IsServer)
-					{
-						light.Enabled = false;
-						light.Delete();
-						light = null;
-					}
-					break;
-			}
-		}
-
-		if ( light != null && IsServer )
-		{
-			light.Position = EyePosition + EyeRotation.Forward * 25;
-			light.Rotation = EyeRotation;
-		}
+		SimulateFlashlight();
 
 		if ( Input.Pressed( InputButton.Drop ) )
 		{
-			var dropped = Inventory.DropActive();
+			Backpack.DropContents();
+			
+			var dropped = Backpack.DropActive();
 			if ( dropped != null )
 			{
+				wepList.Remove( dropped as BLWeaponsBase );
 				if ( dropped.PhysicsGroup != null )
 				{
 					dropped.PhysicsGroup.Velocity = Velocity + (EyeRotation.Forward + EyeRotation.Up) * 300;
@@ -214,19 +166,54 @@ partial class BLPawn : Player
 			}
 		}
 
+		//wepList.Clear();
+		
+		/*foreach ( var item in Backpack.List )
+		{
+			if(item is BLWeaponsBase wep)
+				wepList.Add( wep );
+		}*/
+
 		var controller = GetActiveController();
 		controller?.Simulate( cl, this, GetActiveAnimator() );
 
 		SimulateActiveChild( cl, ActiveChild );
 	}
+
+	int scroll = 0;
+
+	[Event.BuildInput]
+	public void ProcessClientInput( InputBuilder input )
+	{
+		var player = Local.Pawn as BLPawn;
+
+		if ( player == null ) return;
+
+		if ( wepList.Count <= 0 )
+			return;
+
+		scroll -= input.MouseWheel;
+		scroll = scroll.Clamp( 0, wepList.Count - 1 );
+
+		var selectedSlot = wepList[scroll];
+
+		if ( selectedSlot == null || selectedSlot == player?.ActiveChild )
+			return;
+
+		input.ActiveChild = selectedSlot;
+	}
+
 	public override void StartTouch( Entity other )
 	{
 		if ( timeSinceDropped < 1 ) return;
 
 		base.StartTouch( other );
 
-		if(other is BLWeaponsBase wep)
-			Inventory.Add( wep );
+		if ( other is BLWeaponsBase wep )
+		{
+			Backpack.Add( wep );
+			wepList.Add( wep );
+		}
 	}
 
 	void BecomeRagdoll( Vector3 force, int forceBone )

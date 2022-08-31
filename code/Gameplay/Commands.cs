@@ -20,5 +20,18 @@ public partial class BLGame
 
 		wep.Position = player.EyePosition + player.EyeRotation.Forward * 65;
 	}
+
+	[ConCmd.Admin("bl_ammo_giveall")]
+	public static void CMD_GiveAllAmmo()
+	{
+		var player = ConsoleSystem.Caller.Pawn as BLPawn;
+
+		if ( player == null ) return;
+
+		player.SetAmmo( AmmoType.Pistol, player.MaxAmmo(AmmoType.Pistol) );
+		player.SetAmmo( AmmoType.Rifle, player.MaxAmmo( AmmoType.Rifle ) );
+		player.SetAmmo( AmmoType.Buckshot, player.MaxAmmo( AmmoType.Buckshot ) );
+		player.SetAmmo( AmmoType.Crossbow, player.MaxAmmo( AmmoType.Crossbow ) );
+	}
 }
 

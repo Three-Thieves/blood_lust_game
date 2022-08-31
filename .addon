@@ -6,7 +6,9 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": null,
+  "ResourcePaths": [
+    "/ui/*"
+  ],
   "HasCode": true,
   "CodePath": "/code/",
   "RootNamespace": "Sandbox",
@@ -28,6 +30,7 @@
         "trigger": "Trigger",
         "ladder": "Ignore",
         "water": "Trigger",
+        "blweapon": "Collide",
         "blplayer": "Collide"
       },
       "Pairs": [
@@ -57,9 +60,18 @@
           "r": "Collide"
         },
         {
+          "a": "blweapon",
+          "b": "blweapon"
+        },
+        {
           "a": "blplayer",
           "b": "blplayer",
           "r": "Collide"
+        },
+        {
+          "a": "blweapon",
+          "b": "blplayer",
+          "r": "Ignore"
         }
       ]
     },

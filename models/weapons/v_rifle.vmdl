@@ -18,12 +18,8 @@
 								to = "materials/weapons/view_arms.vmat"
 							},
 							{
-								from = "wood.vmat"
-								to = "materials/weapons/raw/wood.vmat"
-							},
-							{
-								from = "metalsheet.vmat"
-								to = "materials/weapons/metalsheet.vmat"
+								from = "map.vmat"
+								to = "materials/weapons/rifle_body.vmat"
 							},
 						]
 						use_global_default = false
@@ -37,7 +33,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models/raw/dbshotgun/doublebarrel_reference.smd"
+						filename = "models/raw/rifle/ref.smd"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
@@ -59,7 +55,7 @@
 				[
 					{
 						_class = "AnimFile"
-						name = "draw"
+						name = "DRAW"
 						activity_name = ""
 						activity_weight = 1
 						weight_list_name = ""
@@ -71,28 +67,7 @@
 						hidden = false
 						anim_markup_ordered = false
 						disable_compression = false
-						source_filename = "models/raw/dbshotgun/v_doublebarrel_anims/draw.smd"
-						start_frame = -1
-						end_frame = -1
-						framerate = 22.5
-						take = 0
-						reverse = false
-					},
-					{
-						_class = "AnimFile"
-						name = "idle01"
-						activity_name = ""
-						activity_weight = 1
-						weight_list_name = ""
-						fade_in_time = 0.2
-						fade_out_time = 0.2
-						looping = false
-						delta = false
-						worldSpace = false
-						hidden = false
-						anim_markup_ordered = false
-						disable_compression = false
-						source_filename = "models/raw/dbshotgun/v_doublebarrel_anims/idle01.smd"
+						source_filename = "models/raw/rifle/v_rifle_anim/DRAW.smd"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
@@ -101,7 +76,7 @@
 					},
 					{
 						_class = "AnimFile"
-						name = "reload1"
+						name = "FIRE1"
 						activity_name = ""
 						activity_weight = 1
 						weight_list_name = ""
@@ -113,7 +88,7 @@
 						hidden = false
 						anim_markup_ordered = false
 						disable_compression = false
-						source_filename = "models/raw/dbshotgun/v_doublebarrel_anims/reload1.smd"
+						source_filename = "models/raw/rifle/v_rifle_anim/FIRE1.smd"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
@@ -122,7 +97,7 @@
 					},
 					{
 						_class = "AnimFile"
-						name = "reload2"
+						name = "PUMP"
 						activity_name = ""
 						activity_weight = 1
 						weight_list_name = ""
@@ -134,7 +109,7 @@
 						hidden = false
 						anim_markup_ordered = false
 						disable_compression = false
-						source_filename = "models/raw/dbshotgun/v_doublebarrel_anims/reload2.smd"
+						source_filename = "models/raw/rifle/v_rifle_anim/PUMP.smd"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
@@ -143,7 +118,7 @@
 					},
 					{
 						_class = "AnimFile"
-						name = "reload3"
+						name = "RELOAD_END"
 						activity_name = ""
 						activity_weight = 1
 						weight_list_name = ""
@@ -155,7 +130,7 @@
 						hidden = false
 						anim_markup_ordered = false
 						disable_compression = false
-						source_filename = "models/raw/dbshotgun/v_doublebarrel_anims/reload3.smd"
+						source_filename = "models/raw/rifle/v_rifle_anim/RELOAD_END.smd"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
@@ -164,7 +139,7 @@
 					},
 					{
 						_class = "AnimFile"
-						name = "single_fire"
+						name = "RELOAD_LOOP"
 						activity_name = ""
 						activity_weight = 1
 						weight_list_name = ""
@@ -176,7 +151,28 @@
 						hidden = false
 						anim_markup_ordered = false
 						disable_compression = false
-						source_filename = "models/raw/dbshotgun/v_doublebarrel_anims/altfire.smd"
+						source_filename = "models/raw/rifle/v_rifle_anim/RELOAD_LOOP.smd"
+						start_frame = -1
+						end_frame = -1
+						framerate = 7.5
+						take = 0
+						reverse = false
+					},
+					{
+						_class = "AnimFile"
+						name = "RELOAD_START"
+						activity_name = ""
+						activity_weight = 1
+						weight_list_name = ""
+						fade_in_time = 0.2
+						fade_out_time = 0.2
+						looping = false
+						delta = false
+						worldSpace = false
+						hidden = false
+						anim_markup_ordered = false
+						disable_compression = false
+						source_filename = "models/raw/rifle/v_rifle_anim/RELOAD_START.smd"
 						start_frame = -1
 						end_frame = -1
 						framerate = -1.0
@@ -184,8 +180,8 @@
 						reverse = false
 					},
 					{
-						_class = "AnimFile"
-						name = "double_fire"
+						_class = "AnimFrame"
+						name = "IDLE"
 						activity_name = ""
 						activity_weight = 1
 						weight_list_name = ""
@@ -197,12 +193,9 @@
 						hidden = false
 						anim_markup_ordered = false
 						disable_compression = false
-						source_filename = "models/raw/dbshotgun/v_doublebarrel_anims/altfire.smd"
-						start_frame = -1
-						end_frame = -1
-						framerate = 20.0
-						take = 0
-						reverse = false
+						src_anim_name = "DRAW"
+						frame_type = "LastFrame"
+						frame = 0
 					},
 				]
 				default_root_bone_name = ""
@@ -213,10 +206,19 @@
 				[
 					{
 						_class = "Attachment"
+						name = "ejection_point"
+						parent_bone = ""
+						relative_origin = [ 25.590431, -6.457082, -5.710487 ]
+						relative_angles = [ -0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
+					},
+					{
+						_class = "Attachment"
 						name = "muzzle"
 						parent_bone = ""
-						relative_origin = [ 42.806736, -6.140226, -5.700764 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
+						relative_origin = [ 55.430775, -3.303844, -4.466092 ]
+						relative_angles = [ -0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
@@ -225,7 +227,7 @@
 		]
 		model_archetype = ""
 		primary_associated_entity = ""
-		anim_graph_name = "animgraphs/weapons/v_doublebarrel.vanmgrph"
+		anim_graph_name = "animgraphs/weapons/v_winchester.vanmgrph"
 		base_model_name = ""
 	}
 }

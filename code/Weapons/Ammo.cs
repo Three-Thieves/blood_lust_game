@@ -81,10 +81,10 @@ public partial class BLPawn
 	{
 		switch ( ammo )
 		{
-			case AmmoType.Pistol: return 250;
-			case AmmoType.Python: return 36;
-			case AmmoType.Buckshot: return 100;
-			case AmmoType.Crossbow: return 40;
+			case AmmoType.Pistol: return 18;
+			case AmmoType.Buckshot: return 24;
+			case AmmoType.Rifle: return 28;
+			case AmmoType.Crossbow: return 5;
 		}
 
 		return 0;
@@ -96,6 +96,6 @@ public enum AmmoType
 	None,
 	Pistol,
 	Buckshot,
+	Rifle,
 	Crossbow,
-	Python,
 }

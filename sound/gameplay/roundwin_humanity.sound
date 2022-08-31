@@ -2,16 +2,18 @@
 {
 	data = 
 	{
-		UI = false
+		UI = true
 		Volume = 1
 		VolumeRandom = 0
 		Pitch = 1
 		PitchRandom = 0
-		DistanceMax = 360
+		Decibels = 70
 		Sounds = 
 		[
-			resource:"sound/raw/vampiremaledeath.vsnd",
+			resource:"sound/raw/humanity_win.vsnd",
 		]
-		SelectionMode = 3
+		SelectionMode = "Random"
+		MaximumDistance = 1143.9335
+		MinimumDistance = 57.196674
 	}
 }

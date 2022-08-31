@@ -6,11 +6,8 @@ public class Crosshair : Panel
 
 	public Crosshair()
 	{
-		for ( int i = 0; i < 5; i++ )
-		{
-			var p = Add.Panel( "element" );
-			p.AddClass( $"el{i}" );
-		}
+		StyleSheet.Load( "/UI/Styles/Crosshair.scss" );
+		var p = Add.Panel();
 	}
 
 	public override void Tick()

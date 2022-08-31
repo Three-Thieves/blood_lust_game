@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System.ComponentModel;
 using SandboxEditor;
+
 [Title("Stake"), Category("BL Weapons"), Icon("weapon")]
 [Library( "bl_stake" )]
 [EditorModel( "models/weapons/w_stake.vmdl" )]
@@ -64,6 +65,7 @@ partial class Stake : BLWeaponsBase
 					{
 						if ( ragdoll.CorpseOwner.Client == client && client.Pawn is BLPawn deadVamp )
 						{
+							deadVamp.PlaySound("vampire_deathscream");
 							deadVamp.UpdatePlayerTeam( BLPawn.BLTeams.Spectator );
 							BLGame.GameCurrent.CheckRoundStatus();
 						}

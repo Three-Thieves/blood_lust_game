@@ -51,9 +51,13 @@ public partial class BLWeaponsBase : BaseWeapon
 
 	public override void Spawn()
 	{
-		base.Spawn();
+		PhysicsEnabled = true;
+		UsePhysicsCollision = true;
+		EnableHideInFirstPerson = true;
+		EnableShadowInFirstPerson = true;
 
 		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+		Tags.Add( "blweapon" );
 
 		PickupTrigger = new PickupTrigger();
 		PickupTrigger.Parent = this;
@@ -177,6 +181,25 @@ public partial class BLWeaponsBase : BaseWeapon
 				tr.Entity.TakeDamage( damageInfo );
 			}
 		}
+	}
+
+	public override IEnumerable<TraceResult> TraceBullet( Vector3 start, Vector3 end, float radius = 2.0f )
+	{
+		bool underWater = Trace.TestPoint( start, "water" );
+
+		var trace = Trace.Ray( start, end )
+				.UseHitboxes()
+				.WithAnyTags( "solid", "blplayer" )
+				.Ignore( this )
+				.Size( radius );
+
+		if ( !underWater )
+			trace = trace.WithAnyTags( "water" );
+
+		var tr = trace.Run();
+
+		if ( tr.Hit )
+			yield return tr;
 	}
 
 	public bool TakeAmmo( int amount )
