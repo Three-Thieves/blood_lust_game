@@ -92,6 +92,9 @@ public partial class BLWeaponsBase : BaseWeapon
 		if ( TimeSinceDeployed < 0.6f )
 			return;
 
+		if ( owner.Pawn.LifeState == LifeState.Dead )
+			return;
+
 		if ( !IsReloading )
 		{
 			base.Simulate( owner );

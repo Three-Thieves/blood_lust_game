@@ -14,6 +14,9 @@ public class BLHud : RootPanel
 			Current = null;
 		}
 
+		StyleSheet.Load( "/UI/Styles/blhud.scss" );
+		SetTemplate( "/UI/HTML/hud.html" );
+
 		Current = this;
 
 		AddChild<DamageIndicator>();
@@ -23,6 +26,9 @@ public class BLHud : RootPanel
 		AddChild<Scoreboard<ScoreboardEntry>>();
 		AddChild<Vitals>();
 		AddChild<Crosshair>();
+		AddChild<BackpackBar>();
+		AddChild<RoundRoleTeller>();
+		AddChild<PlayerInfo>();
 	}
 
 	public override void Tick()

@@ -14,7 +14,8 @@
   "RootNamespace": "Sandbox",
   "Metadata": {
     "MapList": [
-      "facepunch.flatgrass"
+      "facepunch.flatgrass",
+      "thieves.ttt_cluedo"
     ],
     "PerMapRanking": false,
     "LeaderboardType": "None",
@@ -31,7 +32,8 @@
         "ladder": "Ignore",
         "water": "Trigger",
         "blweapon": "Collide",
-        "blplayer": "Collide"
+        "blplayer": "Collide",
+        "blitem": "Collide"
       },
       "Pairs": [
         {
@@ -72,6 +74,21 @@
           "a": "blweapon",
           "b": "blplayer",
           "r": "Ignore"
+        },
+        {
+          "a": "blitem",
+          "b": "blitem",
+          "r": "Collide"
+        },
+        {
+          "a": "blplayer",
+          "b": "blitem",
+          "r": "Ignore"
+        },
+        {
+          "a": "blweapon",
+          "b": "blitem",
+          "r": "Collide"
         }
       ]
     },

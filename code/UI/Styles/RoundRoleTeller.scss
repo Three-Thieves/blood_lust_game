@@ -1,0 +1,36 @@
+﻿RoundRoleTeller {
+    opacity: 0;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Chiller;
+    flex-direction: row;
+
+    .roleTeller {
+        position: absolute;
+        font-size: 128px;
+        text-align: center;
+        left: 36.5%;
+        top: 35%;
+    }
+
+    .numTeller {
+        position: absolute;
+        font-size: 96px;
+        right: 18.5%;
+        top: 50%;
+    }
+
+    .adviceTeller {
+        position: absolute;
+        font-size: 64px;
+        top: 65%;
+    }
+
+    &.showMenu {
+        opacity: 1;
+    }
+}

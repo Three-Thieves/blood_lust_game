@@ -1,4 +1,4 @@
-﻿inventorybar
+﻿backpackbar
 {
 	position: absolute;
 	left: 200px;
@@ -16,7 +16,7 @@
 	}
 }
 
-inventorycolumn
+backpackcolumn
 {
 	margin-right: 5px;
 	color: #fc0;
@@ -33,7 +33,7 @@ inventorycolumn
 		height: 40px;
 	}
 
-	inventoryicon
+	backpackicon
 	{
 		opacity: 1;
 		padding: 25px 15px 10px 2px;
@@ -54,7 +54,7 @@ inventorycolumn
 	{
 		opacity: 1;
 
-		inventoryicon
+		backpackicon
 		{
 			transition: all 0.1s ease-out;
 			opacity: 0.2;
@@ -75,7 +75,7 @@ inventorycolumn
 	}
 }
 
-inventoryicon
+backpackicon
 {
 	margin-top: 5px;
 	mix-blend-mode: lighten;

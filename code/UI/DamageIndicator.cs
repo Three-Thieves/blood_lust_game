@@ -11,40 +11,18 @@ public partial class DamageIndicator : Panel
 		Current = this;
 	}
 
-	public void OnHit( Vector3 pos )
+	public void OnHit()
 	{
-		var p = new HitPoint( pos );
+		var p = new HitPoint();
 		p.Parent = this;
 	}
 
 	public class HitPoint : Panel
 	{
-		public Vector3 Position;
-
-		public HitPoint( Vector3 pos )
+		public HitPoint()
 		{
-			Position = pos;
-
+			StyleSheet.Load( "/UI/Styles/damageindicator.sccs" );
 			_ = Lifetime();
-		}
-
-		public override void Tick()
-		{
-			base.Tick();
-
-			var wpos = CurrentView.Rotation.Inverse * (Position.WithZ( 0 ) - CurrentView.Position.WithZ( 0 )).Normal;
-			wpos = wpos.WithZ( 0 ).Normal;
-
-			var angle = MathF.Atan2( wpos.y, -1.0f * wpos.x );
-
-			var pt = new PanelTransform();
-
-			pt.AddTranslateX( Length.Percent( -50.0f ) );
-			pt.AddTranslateY( Length.Percent( -0.0f ) );
-			pt.AddRotation( 0, 0, angle.RadianToDegree() );
-
-			Style.Transform = pt;
-
 		}
 
 		async Task Lifetime()

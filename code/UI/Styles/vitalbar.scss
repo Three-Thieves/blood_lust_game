@@ -5,6 +5,12 @@
     width: 100%;
     height: 30%;
 
+    .ident {
+        color: white;
+        font-size: 64px;
+        right: 25px;
+    }
+
     .HealthBar {
         align-items: flex-end;
         height: 256px;
@@ -20,10 +26,8 @@
             background-image: url(ui/healthbar_human.png);
             background-repeat: no-repeat;
             background-size: contain;
-            background-repeat: no-repeat;
             background-size: 256px;
             background-position: top;
-            //width: 256px;
         }
 
         &.vampire {
@@ -31,6 +35,37 @@
             background-repeat: no-repeat;
             background-size: 256px;
             background-position: top;
+        }
+    }
+
+    .bloodbar {
+        opacity: 0;
+        transition: height 1s linear;
+        width: 256px;
+        right: 32px;
+        align-items: flex-end;
+
+        .border {
+            position: absolute;
+            background-image: url(ui/bloodbar_border.png);
+            background-repeat: no-repeat;
+            background-size: 256px;
+            background-position: top;
+        }
+
+        .blood {
+            position: absolute;
+            background-image: url(ui/bloodbar.png);
+            background-repeat: no-repeat;
+            background-size: 256px;
+            background-position: top;
+            width: 256px;
+            height: 256px;
+            transform: rotateX(180);
+        }
+
+        &.isVampire {
+            opacity: 1;
         }
     }
 

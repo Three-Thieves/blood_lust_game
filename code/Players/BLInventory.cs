@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Sandbox;
 
 public partial class BLInventory : IBaseInventory
@@ -52,9 +53,7 @@ public partial class BLInventory : IBaseInventory
 		Host.AssertServer();
 
 		foreach ( var item in List.ToArray() )
-		{
 			item.Delete();
-		}
 
 		List.Clear();
 	}
@@ -270,9 +269,23 @@ public partial class BLInventory : IBaseInventory
 
 	public void DropContents()
 	{
+		if ( !Host.IsServer )
+			return;
+
 		foreach ( var item in List )
 		{
-			Log.Info( item );
+			if ( item is BLWeaponsBase wep && !wep.IsDroppable )
+				continue;
+
+			if ( !Contains( item ) )
+				return;
+
+			item.Parent = null;
+
+			if ( item is BaseCarriable bc )
+				bc.OnCarryDrop( Owner );
 		}
+
+		List.Clear();
 	}
 }

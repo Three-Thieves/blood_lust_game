@@ -1,0 +1,14 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "sky.vfx"
+
+	//---- Format ----
+	F_TEXTURE_FORMAT2 6 // BC6H (HDR compressed - recommended)
+
+	//---- Texture ----
+	g_flBrightnessExposureBias "-0.200"
+	g_flRenderOnlyExposureBias "-2.500"
+	SkyTexture "materials/sky/sky_test.jpg"
+}

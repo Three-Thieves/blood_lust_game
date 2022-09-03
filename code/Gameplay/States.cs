@@ -9,7 +9,7 @@ public partial class BLGame : Game
 {
 	public static BLGame GameCurrent => Current as BLGame;
 
-	public static GameStates CurrentState => (Current as BLGame)?.GameState ?? GameStates.Idle;
+	public static GameStates CurrentState => Instance?.GameState ?? GameStates.Idle;
 
 	public int MaxRounds { get; private set; } = 8;
 

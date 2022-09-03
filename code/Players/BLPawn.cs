@@ -6,8 +6,6 @@ using System.Linq;
 
 partial class BLPawn : Player
 {
-	ClothingContainer container = new();
-
 	TimeSince timeSinceDropped;
 	DamageInfo lastDMGInfo;
 	TimeUntil timeUntilResurrection;
@@ -16,35 +14,29 @@ partial class BLPawn : Player
 
 	[Net]
 	public float MaxHealth { get; set; } = 100;
-	public bool SupressPickupNotices { get; private set; }
 
 	public BLInventory Backpack { get; protected set; }
-
-	[Net]
-	List<BLWeaponsBase> wepList { get; set; }
 
 	public BLPawn()
 	{
 		Backpack = new BLInventory( this );
 	}
 
-	public BLPawn( Client cl ) : this()
-	{
-		container.LoadFromClient( cl );
-	}
-
 	public override void Spawn()
 	{
 		CreateHull();
 
-		Tags.Add( "player" );
-
+		Tags.Add( "blplayer" );
 		EnableLagCompensation = true;
 
 		SetModel( "models/citizen/citizen.vmdl" );
 
-		Controller = new WalkController();
-		CameraMode = new FirstPersonCamera();
+		Controller = new WalkController()
+		{
+			SprintSpeed = 130.0f,
+		};
+
+		
 		Animator = new StandardPlayerAnimator();
 
 		BLCurTeam = BLTeams.Spectator;
@@ -54,28 +46,65 @@ partial class BLPawn : Player
 
 		if (BLGame.CurrentState != BLGame.GameStates.Active)
 		{
+			CameraMode = new FirstPersonCamera();
 			EnableDrawing = true;
 			EnableAllCollisions = true;
-			container.DressEntity( this );
 		} 
 		else
 		{
+			CameraMode = new DevCamera();
 			EnableDrawing = false;
 			EnableAllCollisions = false;
 		}
 
 		CreatePlayerFlashlight();
-		BLGame.Current?.MoveToSpawnpoint( this );
+		BLGame.Instance.MoveToSpawnpoint( this );
+	}
+
+	public void GiveHands()
+	{
+		Host.AssertServer();
+
+		var hands = new Hands();
+		if ( Backpack.Contains( hands ) )
+		{
+			hands.Delete();
+			return;
+		}
+
+		Backpack.Add( hands );
 	}
 
 	public override void Respawn()
 	{
-		base.Respawn();
+		Host.AssertServer();
+
+		LifeState = LifeState.Alive;
+		Health = 100;
+		Velocity = Vector3.Zero;
+		WaterLevel = 0;
+
+		SetIdentity();
+
+		CreateHull();
+		ClearAmmo();
+
+		BLGame.Instance.MoveToSpawnpoint( this );
+		ResetInterpolation();
+
+		hat?.Delete();
+		hat = null;
+
+		Backpack.DeleteContents();
+
+		RemoveAllDecals();
 
 		CameraMode = new FirstPersonCamera();
 		
 		if ( wFlash.IsValid )
 			DeleteFlashlight();
+
+		DoHeartbeat( To.Single( this ), false );
 
 		CreatePlayerFlashlight();
 
@@ -88,7 +117,6 @@ partial class BLPawn : Player
 		{
 			EnableDrawing = true;
 			EnableAllCollisions = true;
-			container.DressEntity( this );
 		}
 	}
 
@@ -98,7 +126,6 @@ partial class BLPawn : Player
 
 		EnableDrawing = true;
 		EnableAllCollisions = true;
-		container.DressEntity( this );
 
 		LifeState = LifeState.Alive;
 		Health = 25;
@@ -125,18 +152,14 @@ partial class BLPawn : Player
 
 	public override void Simulate( Client cl )
 	{
-		if ( BLGame.CurrentState == BLGame.GameStates.MapVote )
+		if ( BLGame.CurrentState == BLGame.GameStates.MapVote || BLGame.CurrentState == BLGame.GameStates.Start )
 			return;
-
 
 		if (BLCurTeam == BLTeams.Vampire && LifeState == LifeState.Dead && IsServer )
 		{
-			Log.Info( timeUntilResurrection );
-
 			if(Input.Pressed(InputButton.PrimaryAttack) && timeUntilResurrection < 0.0f)
-			{
 				Resurrect();
-			}
+
 			return;
 		}
 
@@ -150,13 +173,11 @@ partial class BLPawn : Player
 		SimulateFlashlight();
 
 		if ( Input.Pressed( InputButton.Drop ) )
-		{
-			Backpack.DropContents();
-			
+		{	
 			var dropped = Backpack.DropActive();
+
 			if ( dropped != null )
 			{
-				wepList.Remove( dropped as BLWeaponsBase );
 				if ( dropped.PhysicsGroup != null )
 				{
 					dropped.PhysicsGroup.Velocity = Velocity + (EyeRotation.Forward + EyeRotation.Up) * 300;
@@ -166,67 +187,44 @@ partial class BLPawn : Player
 			}
 		}
 
-		//wepList.Clear();
-		
-		/*foreach ( var item in Backpack.List )
-		{
-			if(item is BLWeaponsBase wep)
-				wepList.Add( wep );
-		}*/
-
 		var controller = GetActiveController();
 		controller?.Simulate( cl, this, GetActiveAnimator() );
 
 		SimulateActiveChild( cl, ActiveChild );
 	}
 
-	int scroll = 0;
-
-	[Event.BuildInput]
-	public void ProcessClientInput( InputBuilder input )
-	{
-		var player = Local.Pawn as BLPawn;
-
-		if ( player == null ) return;
-
-		if ( wepList.Count <= 0 )
-			return;
-
-		scroll -= input.MouseWheel;
-		scroll = scroll.Clamp( 0, wepList.Count - 1 );
-
-		var selectedSlot = wepList[scroll];
-
-		if ( selectedSlot == null || selectedSlot == player?.ActiveChild )
-			return;
-
-		input.ActiveChild = selectedSlot;
-	}
-
 	public override void StartTouch( Entity other )
 	{
-		if ( timeSinceDropped < 1 ) return;
 
-		base.StartTouch( other );
+		if ( BLGame.CurrentState != BLGame.GameStates.Active )	return;
+
+		if ( timeSinceDropped < 1 ) return;
 
 		if ( other is BLWeaponsBase wep )
 		{
+			if ( wep is HunterStake && BLCurTeam == BLTeams.Vampire )
+				return;
+
 			Backpack.Add( wep );
-			wepList.Add( wep );
 		}
+
+		base.StartTouch(other);
 	}
 
 	void BecomeRagdoll( Vector3 force, int forceBone )
 	{
 		var ent = new BLRagdoll();
+
 		ent.Position = Position;
 		ent.Rotation = Rotation;
 		ent.UsePhysicsCollision = true;
-
+		ent.PhysicsEnabled = true;
 		ent.EnableTraceAndQueries = true;
 
 		ent.CorpseOwner = this;
 		ent.CorpseTeam = BLCurTeam;
+		ent.CorpseIdent = Identity;
+		ent.CorpseName = PlayerIdentity;
 
 		ent.SetModel( GetModelName() );
 		ent.CopyBonesFrom( this );
@@ -265,25 +263,68 @@ partial class BLPawn : Player
 		Corpse = ent;
 	}
 
+	Sound nearDeathSnd;
+
 	public override void TakeDamage( DamageInfo info )
 	{
 		if ( BLGame.CurrentState != BLGame.GameStates.Active )
 			return;
 
+		switch(info.BoneIndex)
+		{
+			case 11:
+				info.Damage *= 2;
+				break;
+		}
+
 		lastDMGInfo = info;
 
+		TookDamage( To.Single( this ) );
+	
+		DoHeartbeat( To.Single( this ), Health <= 30.0f );
+		
 		base.TakeDamage( info );
+	}
+
+	[ClientRpc]
+	public void DoHeartbeat(bool lowHP)
+	{
+		if ( lowHP )
+			nearDeathSnd = PlaySound( "heartbeat" );
+		else
+			nearDeathSnd.Stop();
+	}
+
+	[ClientRpc]
+	public void TookDamage()
+	{
+		//DebugOverlay.Sphere( pos, 10.0f, Color.Red, true, 10.0f );
+
+		DamageIndicator.Current.OnHit( );
+	}
+
+	protected override void UseFail()
+	{
+		
 	}
 
 	public override void OnKilled()
 	{
 		base.OnKilled();
 
+		DoHeartbeat( To.Single( this ), false );
+
 		EnableDrawing = false;
 		EnableAllCollisions = false;
-		CameraMode = new SpectateRagdollCamera();
 
-		Inventory.DeleteContents();
+		if ( BLCurTeam == BLTeams.Vampire )
+			CameraMode = new SpectateRagdollCamera();
+		else
+			CameraMode = new DevCamera();
+
+		if(Backpack.Count() > 0)
+			Backpack.DropContents();
+
 		ClearAmmo();
 
 		BecomeRagdoll( lastDMGInfo.Force, lastDMGInfo.HitboxIndex );

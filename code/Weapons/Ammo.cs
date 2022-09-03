@@ -59,7 +59,7 @@ public partial class BLPawn
 		if ( existing != null ) return false;
 
 		var weapon = TypeLibrary.Create<BLWeaponsBase>( weaponName );
-		if ( Inventory.Add( weapon ) )
+		if ( Backpack.Add( weapon ) )
 			return true;
 
 		weapon?.Delete();

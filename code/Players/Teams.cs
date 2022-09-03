@@ -16,14 +16,14 @@ public partial class BLPawn : Player
 		Vampire
 	}
 
-
-	[Net, Change( nameof( ServerNotifyTeam ) )]
-	public BLTeams BLCurTeam { get; protected set; } = BLTeams.Spectator;
-
-	public void ServerNotifyTeam( BLTeams oldTeam, BLTeams newTeam )
+	public enum StatusEnum
 	{
-		Log.Info( $"{Client.Name} has changed from {oldTeam} to {newTeam}" );
+		Dead,
+		Alive,
 	}
+
+	[Net]
+	public BLTeams BLCurTeam { get; protected set; } = BLTeams.Spectator;
 
 	public void UpdatePlayerTeam(BLTeams updateTeam)
 	{

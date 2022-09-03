@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-public partial class BLGame : Game
+public partial class BLGame
 {
 	public enum WinningEnum
 	{
@@ -13,6 +13,10 @@ public partial class BLGame : Game
 		Humanity,
 		Vampires
 	}
+
+	public List<string> takenMaleNames;
+	public List<string> takenFemaleNames;
+	public List<string> takenHunterNames;
 
 	public IList<BLPawn> GetTeamMembers( BLPawn.BLTeams teamType )
 	{
@@ -53,53 +57,63 @@ public partial class BLGame : Game
 
 	public void StartRound()
 	{
+		takenMaleNames.Clear();
+		takenFemaleNames.Clear();
+		takenHunterNames.Clear();
+
 		PlayGameplaySounds( To.Everyone, "roundstart" );
 
 		All.OfType<BLPawn>().ToList().ForEach( x =>
 		{
-			x.ClearAmmo();
-			x.Backpack.DeleteContents();
 			x.Respawn();
+			x.GiveHands();
 		} );
 
 		Map.Reset( BLCleanupFilter );
 
-		int vampLimit = 1; //Math.Abs(Client.All.Count / 2);
-		int hunterLimit = Math.Abs( Client.All.Count / 4 );
+		int vampLimit = Math.Abs( Client.All.Count / 6) + 1;
+		int hunterLimit = Math.Abs( Client.All.Count / 6 );
 
 		//Randomly select spectator players to join the vampires
 
 		for ( int i = 0; i < vampLimit; i++ )
 		{
 			bool check = false;
-			
-			while( !check )
+
+			while ( !check )
 			{
 				var randClient = Client.All.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
 
 				if ( randClient.Pawn is BLPawn player && player.BLCurTeam == BLPawn.BLTeams.Spectator )
 				{
 					player.UpdatePlayerTeam( BLPawn.BLTeams.Vampire );
+					player.SetUpVampire();
 					check = true;
 				}
 			}
 		}
-		
-		/*while ( vampLimit > 0 )
-		{
-			foreach ( var client in Client.All )
-			{
-				if ( client.Pawn is BLPawn player && player.BLCurTeam == BLPawn.BLTeams.Spectator && client.Id == Rand.Int( 1, Client.All.Count ) )
-				{
-					player.UpdatePlayerTeam( BLPawn.BLTeams.Vampire );
-					vampLimit--;
-				}
-			}
-		}*/
 
 		//If we have enough players for hunters, select random players in spectator
-		//TODO, add hunters
 
+		if ( hunterLimit > 0 )
+		{
+			for ( int i = 0; i < hunterLimit; i++ )
+			{
+				bool check = false;
+
+				while ( !check )
+				{
+					var randClient = Client.All.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
+
+					if ( randClient.Pawn is BLPawn player && player.BLCurTeam == BLPawn.BLTeams.Spectator )
+					{
+						player.UpdatePlayerTeam( BLPawn.BLTeams.Hunter );
+						player.SetUpHunter();
+						check = true;
+					}
+				}
+			}
+		}
 		//The rest of the players are set to humans from spectator
 		foreach ( var client in Client.All )
 		{
@@ -107,7 +121,7 @@ public partial class BLGame : Game
 				player.UpdatePlayerTeam( BLPawn.BLTeams.Human );
 		}
 
-		StateTimer = 10.0f;
+		StateTimer = 8.0f;
 		GameState = GameStates.Start;
 	}
 
@@ -123,6 +137,7 @@ public partial class BLGame : Game
 		if ( GameState == GameStates.Idle )
 		{
 			StartRound();
+			return;
 		}
 
 		if(GameState == GameStates.Start)
@@ -135,6 +150,7 @@ public partial class BLGame : Game
 		if ( GameState == GameStates.Active )
 		{
 			EndRound( WinningEnum.Humanity );
+			return;
 		}
 
 		if ( GameState == GameStates.Post )

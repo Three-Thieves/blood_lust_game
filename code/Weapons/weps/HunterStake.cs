@@ -2,11 +2,9 @@
 using System.ComponentModel;
 using SandboxEditor;
 
-[Title( "Stake" ), Category( "BL Weapons" ), Icon( "weapon" )]
-[Library( "bl_stake" )]
-[EditorModel( "models/weapons/w_stake.vmdl" )]
-[HammerEntity]
-partial class Stake : BLWeaponsBase
+[Library( "bl_stake_hunter" )]
+[HideInEditor]
+partial class HunterStake : BLWeaponsBase
 {
 	public static Model WorldModel = Model.Load( "models/weapons/w_stake.vmdl" );
 	public override string ViewModelPath => "models/weapons/v_stake.vmdl";
@@ -54,20 +52,16 @@ partial class Stake : BLWeaponsBase
 				.WithAttacker( Owner )
 				.WithWeapon( this );
 
-			damageInfo.Damage = 10.0f;
+			damageInfo.Damage = 15.0f;
 
 			tr.Entity.TakeDamage( damageInfo );
 
-			if ( tr.Entity is BLRagdoll ragdoll && IsServer && !ragdoll.IsStaked )
+			if ( tr.Entity is BLRagdoll ragdoll && IsServer )
 			{
 				if ( ragdoll.CorpseTeam == BLPawn.BLTeams.Vampire )
 					ragdoll.CorpseOwner.Staked();
 				else
 					ragdoll.IsStaked = true;
-
-				var ply = Owner as BLPawn;
-				ply.Backpack.GetSlot( ply.Backpack.GetActiveSlot() ).Delete();
-				return;
 			}
 		}
 

@@ -1,0 +1,82 @@
+﻿
+$yellow: #ff0;
+$orange: #f70;
+
+@import "crosshair.scss";
+//@import "_damageindicator.scss";
+//@import "_hitindicator.scss";
+@import "backpackbar.scss";
+//@import "_killfeed.scss";
+//@import "_pickupfeed.scss";
+//@import "_scoreboard.scss";
+
+blhud {
+    
+}
+
+.bottom-left {
+    left: 200px;
+}
+
+.bottom-right {
+    right: 200px;
+}
+
+.bottom-left, .bottom-right {
+    mix-blend-mode: lighten;
+    position: absolute;
+    bottom: 100px;
+}
+/*
+.top-middle {
+    top: 32px;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+
+    gamehud {
+        font-family: Roboto;
+        font-size: 20px;
+        flex-direction: column;
+        justify-content: center;
+
+        .game-state {
+            font-size: 12px;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .game-timer {
+            font-size: 32px;
+        }
+    }
+}*/
+
+.backpack {
+    background-color: rgba( #fa0, 0.06 );
+    padding: 16px;
+    margin: 5px;
+    font-size: 32px;
+    font-weight: bolder;
+    color: #ff0;
+    text-shadow: 0px 0px 10px $orange;
+    min-width: 130px;
+    text-align: center;
+    align-items: center;
+    border: 1px solid rgba( #fa0, 0.08 );
+    border-radius: 3px;
+}
+
+iconpanel {
+    font-family: "Material Icons";
+}
+
+.game-end {
+    chatbox, .top-middle {
+        z-index: 1000;
+    }
+
+    inventorybar, .bottom-right, .bottom-left {
+        display: none;
+    }
+}
