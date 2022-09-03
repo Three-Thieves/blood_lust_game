@@ -7,27 +7,19 @@
     align-items: center;
     color: white;
     font-family: Chiller;
-    flex-direction: row;
+    flex-direction: column;
 
     .roleTeller {
-        position: absolute;
-        font-size: 128px;
+        font-size: 60%;
         text-align: center;
-        left: 36.5%;
-        top: 35%;
     }
 
     .numTeller {
-        position: absolute;
-        font-size: 96px;
-        right: 18.5%;
-        top: 50%;
+        font-size: 40%;
     }
 
     .adviceTeller {
-        position: absolute;
-        font-size: 64px;
-        top: 65%;
+        font-size: 40%;
     }
 
     &.showMenu {

@@ -12,6 +12,7 @@ public class PlayerInfo : Panel
 {
 	public Panel PlayerPnl;
 	public Label PlayerIdentity;
+	public Label PlayerDeathStement;
 
 	public PlayerInfo()
 	{
@@ -19,6 +20,7 @@ public class PlayerInfo : Panel
 
 		PlayerPnl = Add.Panel( "panel" );
 		PlayerIdentity = PlayerPnl.Add.Label( "???", "playerInfo" );
+		PlayerDeathStement = PlayerPnl.Add.Label( "", "stement" );
 	}
 
 	public override void Tick()
@@ -56,6 +58,7 @@ public class PlayerInfo : Panel
 				team = "\nHunter";
 
 			PlayerIdentity.SetText( player.PlayerIdentity + team );
+			PlayerDeathStement.SetText( $"" );
 		}
 		else if ( clTr.Entity is BLRagdoll corpse )
 		{
@@ -63,9 +66,9 @@ public class PlayerInfo : Panel
 			string team = "";
 
 			if ( corpse.IsStaked )
-				isStaked = "\nthey appear to have been staked in the heart";
+				isStaked = "they appear to have been staked in the heart";
 			else
-				isStaked = "\nthis body is clear of any chest stab wounds";
+				isStaked = "this body is clear of any chest stab wounds";
 
 			if ( corpse.CorpseTeam == BLPawn.BLTeams.Vampire && corpse.IsStaked )
 				team = ",\nthey were once a vampire";
@@ -74,7 +77,8 @@ public class PlayerInfo : Panel
 			else if ( corpse.CorpseTeam == BLPawn.BLTeams.Hunter )
 				team = ",\nthey served humanity well";
 
-			PlayerIdentity.SetText( $"Here lies {corpse.CorpseName}, {isStaked}{team} " );
+			PlayerIdentity.SetText( $"Here lies {corpse.CorpseName}" );
+			PlayerDeathStement.SetText( $"{isStaked}{team} " );
 		}
 		SetClass( "playerHover", clTr.Entity is BLPawn || clTr.Entity is BLRagdoll);
 

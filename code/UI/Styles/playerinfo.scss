@@ -8,6 +8,16 @@
     font-weight: bold;
     text-shadow: 2px 2px 2px black;
 
+    Label {
+        color: white;
+        &.stement {
+            //margin-top: 12px;
+            //padding: 8px 32px;
+            //border-radius: 32px;
+            //background-color: rgba(0,0,0,0.5);
+        }
+    }
+
     .panel {
         flex-direction: column;
     }
