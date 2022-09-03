@@ -64,8 +64,8 @@ public class PlayerInfo : Panel
 			else if ( player.BLCurTeam == BLPawn.BLTeams.Hunter )
 				team = "\nHunter";
 
-			PlayerIdentity.SetText( player.PlayerIdentity + team );
-			PlayerDeathStement.SetText( $"" );
+			PlayerIdentity.SetText( player.PlayerIdentity );
+			PlayerDeathStement.SetText( $"{team}" );
 		}
 		else if ( clTr.Entity is BLRagdoll corpse )
 		{
