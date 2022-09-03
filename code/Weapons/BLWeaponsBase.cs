@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
-public partial class BLWeaponsBase : BaseWeapon
+public partial class BLWeaponsBase : BaseWeapon, IUse
 {
 	public virtual AmmoType AmmoType => AmmoType.Pistol;
 	public virtual int ClipSize => 16;
@@ -58,10 +58,7 @@ public partial class BLWeaponsBase : BaseWeapon
 
 		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		Tags.Add( "blweapon" );
-
-		PickupTrigger = new PickupTrigger();
-		PickupTrigger.Parent = this;
-		PickupTrigger.Position = Position;
+		SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
 	}
 
 	public override void Reload()
@@ -269,6 +266,28 @@ public partial class BLWeaponsBase : BaseWeapon
 		{
 			PickupTrigger.EnableTouch = true;
 		}
+	}
+
+	public bool OnUse( Entity user )
+	{
+		if(user is BLPawn player)
+			player.Backpack.Add( this );
+
+		return false;
+	}
+
+	public bool IsUsable( Entity user )
+	{
+		if ( BLGame.CurrentState != BLGame.GameStates.Active )
+			return false;
+
+		if(user is BLPawn player)
+		{
+			if ( player.Backpack.Contains( this ) )
+				return false;
+		}
+
+		return true;
 	}
 }
 

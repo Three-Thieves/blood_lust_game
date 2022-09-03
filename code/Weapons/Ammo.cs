@@ -81,9 +81,9 @@ public partial class BLPawn
 	{
 		switch ( ammo )
 		{
-			case AmmoType.Pistol: return 18;
-			case AmmoType.Buckshot: return 24;
-			case AmmoType.Rifle: return 28;
+			case AmmoType.Pistol: return 27;
+			case AmmoType.Buckshot: return 16;
+			case AmmoType.Rifle: return 21;
 			case AmmoType.Crossbow: return 5;
 		}
 

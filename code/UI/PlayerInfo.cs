@@ -46,7 +46,7 @@ public class PlayerInfo : Panel
 
 		TraceResult clTr;
 
-		if ( pawn.BLCurTeam == BLPawn.BLTeams.Vampire )
+		if ( pawn.CurTeam == BLPawn.BLTeams.Vampire )
 			clTr = Trace.Ray( pawn.EyePosition, pawn.EyePosition + pawn.EyeRotation.Forward * 1000 )
 			.Ignore( pawn )
 			.Run();
@@ -59,9 +59,9 @@ public class PlayerInfo : Panel
 		{
 			string team = "";
 
-			if ( player.BLCurTeam == BLPawn.BLTeams.Vampire && pawn.BLCurTeam == BLPawn.BLTeams.Vampire )
+			if ( player.CurTeam == BLPawn.BLTeams.Vampire && pawn.CurTeam == BLPawn.BLTeams.Vampire )
 				team = "\nVampire";
-			else if ( player.BLCurTeam == BLPawn.BLTeams.Hunter )
+			else if ( player.CurTeam == BLPawn.BLTeams.Hunter )
 				team = "\nHunter";
 
 			PlayerIdentity.SetText( player.PlayerIdentity );

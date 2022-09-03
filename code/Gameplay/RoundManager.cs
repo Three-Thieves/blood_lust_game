@@ -26,7 +26,7 @@ public partial class BLGame
 		{
 			if ( clients.Pawn is BLPawn player )
 			{
-				if ( player.BLCurTeam == teamType )
+				if ( player.CurTeam == teamType )
 					teamMembers.Add( player );
 			}
 		}
@@ -85,9 +85,10 @@ public partial class BLGame
 			{
 				var randClient = Client.All.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
 
-				if ( randClient.Pawn is BLPawn player && player.BLCurTeam == BLPawn.BLTeams.Spectator )
+				if ( randClient.Pawn is BLPawn player && player.CurTeam == BLPawn.BLTeams.Spectator )
 				{
 					player.UpdatePlayerTeam( BLPawn.BLTeams.Vampire );
+					player.LastTeam = BLPawn.BLTeams.Vampire;
 					player.SetUpVampire();
 					check = true;
 				}
@@ -106,9 +107,10 @@ public partial class BLGame
 				{
 					var randClient = Client.All.OrderBy( x => Guid.NewGuid() ).FirstOrDefault();
 
-					if ( randClient.Pawn is BLPawn player && player.BLCurTeam == BLPawn.BLTeams.Spectator )
+					if ( randClient.Pawn is BLPawn player && player.CurTeam == BLPawn.BLTeams.Spectator )
 					{
 						player.UpdatePlayerTeam( BLPawn.BLTeams.Hunter );
+						player.LastTeam = BLPawn.BLTeams.Hunter;
 						player.SetUpHunter();
 						check = true;
 					}
@@ -118,8 +120,11 @@ public partial class BLGame
 		//The rest of the players are set to humans from spectator
 		foreach ( var client in Client.All )
 		{
-			if ( client.Pawn is BLPawn player && player.BLCurTeam == BLPawn.BLTeams.Spectator )
+			if ( client.Pawn is BLPawn player && player.CurTeam == BLPawn.BLTeams.Spectator )
+			{
 				player.UpdatePlayerTeam( BLPawn.BLTeams.Human );
+				player.LastTeam = BLPawn.BLTeams.Human;
+			}
 		}
 
 		All.OfType<BLPawn>().ToList().ForEach( x => x.SetIdentity() );
@@ -182,11 +187,7 @@ public partial class BLGame
 		StateTimer = 10;
 		GameState = GameStates.Post;
 
-		foreach ( Client cl in Client.All )
-		{
-			if(cl.Pawn is BLPawn player)
-				player.UpdatePlayerTeam( BLPawn.BLTeams.Spectator );
-		}
+		SetEndResultsClient( To.Everyone, winningTeam );
 
 		CurRound++;
 
@@ -201,6 +202,13 @@ public partial class BLGame
 			StateTimer = mapVote.VoteTimeLeft;
 			Global.ChangeLevel( mapVote.WinningMap );
 		}*/
+	}
+
+	[ClientRpc]
+	public void SetEndResultsClient( WinningEnum winningTeam )
+	{
+		BLHud.Current.AddChild<EndResults>();
+		EndResults.Current.SetResults(winningTeam);
 	}
 
 	private bool HasEnoughPlayers()

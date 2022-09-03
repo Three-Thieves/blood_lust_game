@@ -32,10 +32,10 @@ public partial class BLItemBase : ModelEntity, IUse
 	{
 		var player = user as BLPawn;
 
-		if ( player.BLCurTeam == BLPawn.BLTeams.Vampire && RepelUndead )
+		if ( player.CurTeam == BLPawn.BLTeams.Vampire && RepelUndead )
 			return false;
 
-		if ( (player.BLCurTeam == BLPawn.BLTeams.Human || player.BLCurTeam == BLPawn.BLTeams.Hunter) && ForUndead )
+		if ( (player.CurTeam == BLPawn.BLTeams.Human || player.CurTeam == BLPawn.BLTeams.Hunter) && ForUndead )
 			return false;
 
 		return true;

@@ -66,7 +66,7 @@ public partial class BLPawn
 		CameraMode = new DevCamera();
 
 		stakedBody.IsStaked = true;
-		BLCurTeam = BLTeams.Spectator;
+		CurTeam = BLTeams.Spectator;
 
 		BLGame.GameCurrent.CheckRoundStatus();
 

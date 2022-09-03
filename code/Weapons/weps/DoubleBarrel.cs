@@ -2,7 +2,7 @@
 using Sandbox;
 using SandboxEditor;
 
-[Title( "Double Barrel Shotgun" ), Category("BL Weapons"), Icon("weapon")]
+[Title( "Double Barrel Shotgun" ), Category("Weapons"), Icon("weapon")]
 [Library( "bl_doublebarrel") ]
 [EditorModel( "models/weapons/w_doublebarrel.vmdl" )]
 [HammerEntity]

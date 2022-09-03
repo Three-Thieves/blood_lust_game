@@ -97,7 +97,7 @@ public partial class BLPawn
 			oldClothing.Clear();
 		}
 
-		if ( BLCurTeam == BLTeams.Hunter )
+		if ( CurTeam == BLTeams.Hunter )
 		{
 			Identity = IdentityEnum.Hunter;
 			

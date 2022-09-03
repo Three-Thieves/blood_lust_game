@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using SandboxEditor;
 
-[Title( "Stake" ), Category( "BL Weapons" ), Icon( "weapon" )]
+[Title( "Stake" ), Category( "Weapons" ), Icon( "weapon" )]
 [Library( "bl_stake" )]
 [EditorModel( "models/weapons/w_stake.vmdl" )]
 [HammerEntity]

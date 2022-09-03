@@ -36,15 +36,15 @@ public class Vitals : Panel
 		else
 			Identity.SetText( player.PlayerIdentity );
 
-		Bar.SetClass( "human", player.BLCurTeam == BLPawn.BLTeams.Human || player.BLCurTeam == BLPawn.BLTeams.Hunter );
-		Bar.SetClass( "vampire", player.BLCurTeam == BLPawn.BLTeams.Vampire );
+		Bar.SetClass( "human", player.CurTeam == BLPawn.BLTeams.Human || player.CurTeam == BLPawn.BLTeams.Hunter );
+		Bar.SetClass( "vampire", player.CurTeam == BLPawn.BLTeams.Vampire );
 
-		Border.SetClass( "human", player.BLCurTeam == BLPawn.BLTeams.Human || player.BLCurTeam == BLPawn.BLTeams.Hunter );
-		Border.SetClass( "vampire", player.BLCurTeam == BLPawn.BLTeams.Vampire );
+		Border.SetClass( "human", player.CurTeam == BLPawn.BLTeams.Human || player.CurTeam == BLPawn.BLTeams.Hunter );
+		Border.SetClass( "vampire", player.CurTeam == BLPawn.BLTeams.Vampire );
 
 		Bar.Style.Height = Length.Percent( player.Health.CeilToInt() );
 
-		Blood.SetClass( "isVampire", player.BLCurTeam == BLPawn.BLTeams.Vampire );
+		Blood.SetClass( "isVampire", player.CurTeam == BLPawn.BLTeams.Vampire );
 		BloodBar.Style.Height = Length.Pixels( player.BloodBar );
 	}
 }

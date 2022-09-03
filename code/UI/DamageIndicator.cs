@@ -32,8 +32,6 @@ public partial class DamageIndicator : Panel
 			await Task.Delay( 200 );
 			Delete();
 		}
-
-
 	}
 }
 

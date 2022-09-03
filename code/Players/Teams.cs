@@ -23,11 +23,13 @@ public partial class BLPawn : Player
 	}
 
 	[Net]
-	public BLTeams BLCurTeam { get; protected set; } = BLTeams.Spectator;
+	public BLTeams CurTeam { get; protected set; } = BLTeams.Spectator;
+	[Net]
+	public BLTeams LastTeam { get; set; } = BLTeams.Unknown;
 
 	public void UpdatePlayerTeam(BLTeams updateTeam)
 	{
-		BLCurTeam = updateTeam;
+		CurTeam = updateTeam;
 	}
 }
 

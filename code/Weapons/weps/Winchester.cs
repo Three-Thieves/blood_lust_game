@@ -2,7 +2,7 @@
 using Sandbox;
 using SandboxEditor;
 
-[Title( "Winchester Rifle" ), Category( "BL Weapons" ), Icon( "weapon" )]
+[Title( "Winchester Rifle" ), Category( "Weapons" ), Icon( "weapon" )]
 [Library( "bl_rifle" )]
 [EditorModel( "models/weapons/w_rifle.vmdl" )]
 [HammerEntity]
@@ -13,7 +13,7 @@ partial class Winchester : BLWeaponsBase
 	public override float PrimaryRate => 0.95f;
 	public override float SecondaryRate => -1;
 	public override AmmoType AmmoType => AmmoType.Rifle;
-	public override int ClipSize => 14;
+	public override int ClipSize => 7;
 	public override float ReloadTime => 1.5f;
 	public override int Bucket => 3;
 	public override int BucketWeight => 200;

@@ -81,7 +81,7 @@ public partial class RoundRoleTeller : Panel
 		int totalVamps = BLGame.Instance.GetTeamMembers(BLPawn.BLTeams.Vampire).Count();
 		int totalHunters = BLGame.Instance.GetTeamMembers( BLPawn.BLTeams.Hunter ).Count();
 
-		switch ( player.BLCurTeam )
+		switch ( player.CurTeam )
 		{
 			case BLPawn.BLTeams.Human:
 				RoleLbl.SetText( $"You are a Human" );

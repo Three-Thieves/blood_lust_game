@@ -41,7 +41,7 @@ partial class BLPawn : Player
 		
 		Animator = new StandardPlayerAnimator();
 
-		BLCurTeam = BLTeams.Spectator;
+		CurTeam = BLTeams.Spectator;
 
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
@@ -155,7 +155,7 @@ partial class BLPawn : Player
 		if ( BLGame.CurrentState == BLGame.GameStates.MapVote || BLGame.CurrentState == BLGame.GameStates.Start )
 			return;
 
-		if (BLCurTeam == BLTeams.Vampire && LifeState == LifeState.Dead && IsServer )
+		if (CurTeam == BLTeams.Vampire && LifeState == LifeState.Dead && IsServer )
 		{
 			if(Input.Pressed(InputButton.PrimaryAttack) && timeUntilResurrection < 0.0f)
 				Resurrect();
@@ -171,8 +171,8 @@ partial class BLPawn : Player
 
 		TickPlayerUse();
 		SimulateFlashlight();
-		
-		if(BLCurTeam != BLTeams.Vampire)
+
+		if(CurTeam != BLTeams.Vampire && IsServer)
 			DoHeartbeat( To.Single( this ), Health > 0 && Health <= 30.0f );
 
 		if ( Input.Pressed( InputButton.Drop ) )
@@ -205,10 +205,10 @@ partial class BLPawn : Player
 
 		if ( other is BLWeaponsBase wep )
 		{
-			if ( wep is HunterStake && BLCurTeam == BLTeams.Vampire )
+			if ( wep is HunterStake && CurTeam == BLTeams.Vampire )
 				return;
 
-			if ( wep is Stake && BLCurTeam == BLTeams.Hunter )
+			if ( wep is Stake && CurTeam == BLTeams.Hunter )
 				return;
 
 			Backpack.Add( wep );
@@ -228,7 +228,7 @@ partial class BLPawn : Player
 		ent.EnableTraceAndQueries = true;
 
 		ent.CorpseOwner = this;
-		ent.CorpseTeam = BLCurTeam;
+		ent.CorpseTeam = CurTeam;
 		ent.CorpseIdent = Identity;
 		ent.CorpseName = PlayerIdentity;
 
@@ -320,7 +320,7 @@ partial class BLPawn : Player
 		EnableDrawing = false;
 		EnableAllCollisions = false;
 
-		if ( BLCurTeam == BLTeams.Vampire )
+		if ( CurTeam == BLTeams.Vampire )
 			CameraMode = new SpectateRagdollCamera();
 		else
 			CameraMode = new SpectatorCamera();
@@ -332,13 +332,13 @@ partial class BLPawn : Player
 
 		BecomeRagdoll( lastDMGInfo.Force, lastDMGInfo.HitboxIndex );
 
-		if(BLCurTeam == BLTeams.Human || BLCurTeam == BLTeams.Hunter)
+		if(CurTeam == BLTeams.Human || CurTeam == BLTeams.Hunter)
 		{
 			UpdatePlayerTeam( BLTeams.Spectator );
 			BLGame.GameCurrent.CheckRoundStatus();
 		}
 
-		if ( BLCurTeam == BLTeams.Vampire )
+		if ( CurTeam == BLTeams.Vampire )
 		{
 			timeUntilResurrection = timeToResurrect;
 		}

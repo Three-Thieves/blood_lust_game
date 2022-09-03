@@ -7,7 +7,7 @@ using Sandbox;
 using SandboxEditor;
 
 
-[Title( "Shotgun" ), Category( "BL Weapons" ), Icon( "weapon" )]
+[Title( "Shotgun" ), Category( "Weapons" ), Icon( "weapon" )]
 [Library( "bl_shotgun" )]
 [EditorModel( "models/weapons/w_shotgun.vmdl" )]
 [HammerEntity]
