@@ -67,6 +67,7 @@ public partial class BLGame
 		{
 			x.Respawn();
 			x.GiveHands();
+			x.SetIdentity();
 		} );
 
 		Map.Reset( BLCleanupFilter );
@@ -120,6 +121,8 @@ public partial class BLGame
 			if ( client.Pawn is BLPawn player && player.BLCurTeam == BLPawn.BLTeams.Spectator )
 				player.UpdatePlayerTeam( BLPawn.BLTeams.Human );
 		}
+
+		All.OfType<BLPawn>().ToList().ForEach( x => x.SetIdentity() );
 
 		StateTimer = 8.0f;
 		GameState = GameStates.Start;

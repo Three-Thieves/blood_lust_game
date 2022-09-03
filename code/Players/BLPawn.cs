@@ -26,6 +26,7 @@ partial class BLPawn : Player
 	public override void Spawn()
 	{
 		CreateHull();
+		oldClothing = new List<ModelEntity>();
 
 		Tags.Add( "blplayer" );
 		EnableLagCompensation = true;
@@ -84,8 +85,6 @@ partial class BLPawn : Player
 		Health = 100;
 		Velocity = Vector3.Zero;
 		WaterLevel = 0;
-
-		SetIdentity();
 
 		CreateHull();
 		ClearAmmo();
@@ -241,10 +240,7 @@ partial class BLPawn : Player
 		// Copy the clothes over
 		foreach ( var child in Children )
 		{
-			if ( !child.Tags.Has( "clothes" ) )
-				continue;
-
-			if ( child is ModelEntity e )
+			if ( child is ModelEntity e && child is not BLWeaponsBase)
 			{
 				var clothing = new ModelEntity();
 				clothing.Model = e.Model;

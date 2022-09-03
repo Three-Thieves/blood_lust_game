@@ -15,50 +15,37 @@ public partial class BLGame
 
 		postProcess.Sharpen.Enabled = true;
 		postProcess.Sharpen.Strength = 0.5f;
-
+		
 		postProcess.FilmGrain.Enabled = true;
 		postProcess.FilmGrain.Intensity = 0.2f;
 		postProcess.FilmGrain.Response = 1;
 
-		postProcess.Vignette.Enabled = true;
-		postProcess.Vignette.Intensity = 1.0f;
-		postProcess.Vignette.Roundness = 1.5f;
-		postProcess.Vignette.Smoothness = 0.5f;
-		postProcess.Vignette.Color = Color.Black;
-
 		postProcess.Saturate.Enabled = true;
 		postProcess.Saturate.Amount = 1;
 
-		postProcess.Blur.Enabled = false;
+		postProcess.DepthOfField.Enabled = false;
 
 		if ( Local.Pawn is BLPawn player )
 		{
 			var timeSinceDamage = player.TimeSinceDamage.Relative;
 
 			var damageUi = timeSinceDamage.LerpInverse( 0.25f, 0.0f, true ) * 0.3f;
+			
 			if ( damageUi > 0 )
 			{
 				postProcess.Saturate.Amount -= damageUi;
-				postProcess.Vignette.Color = Color.Lerp( postProcess.Vignette.Color, Color.Red, damageUi );
-				postProcess.Vignette.Intensity += damageUi;
-				postProcess.Vignette.Smoothness += damageUi;
-				postProcess.Vignette.Roundness += damageUi;
 
 				postProcess.Blur.Enabled = true;
 				postProcess.Blur.Strength = damageUi * 0.5f;
 			}
 
+			postProcess.Blur.Enabled = player.Health <= 0 && CurrentState == GameStates.Active;
 
 			var healthDelta = player.Health.LerpInverse( 0, 100.0f, true );
 
 			healthDelta = MathF.Pow( healthDelta, 0.5f );
 
-			postProcess.Vignette.Color = Color.Lerp( postProcess.Vignette.Color, Color.Red, 1 - healthDelta );
-			postProcess.Vignette.Intensity += (1 - healthDelta) * 0.5f;
-			postProcess.Vignette.Smoothness += (1 - healthDelta);
-			postProcess.Vignette.Roundness += (1 - healthDelta) * 0.5f;
-			postProcess.Saturate.Amount *= healthDelta;
-			postProcess.FilmGrain.Intensity += (1 - healthDelta) * 0.5f;
+			postProcess.Saturate.Amount = healthDelta;
 
 		}
 

@@ -20,6 +20,7 @@ public partial class BLPawn
 	[Net]
 	public IdentityEnum Identity { get; private set; }
 
+	public List<ModelEntity> oldClothing;
 
 	public static string[] maleNames = new string[]
 	{
@@ -45,9 +46,40 @@ public partial class BLPawn
 		"Samantha"
 	};
 
-	public static string[] hunterNames = new string[]
+	static string[] hunterNames = new string[]
 	{
 		"Van Helsing", "Lincoln", "Buffy"
+	};
+
+	static string[] femaleHair = new string[]
+	{
+		"models/citizen_clothes/hair/hair_femalebun.blonde.vmdl",
+		"models/citizen_clothes/hair/hair_femalebun.brown.vmdl",
+		"models/citizen_clothes/hair/hair_bun/models/hair_bun.vmdl",
+		"models/citizen_clothes/hair/hair_longcurly/models/hair_longcurly.vmdl"
+	};
+
+	static string[] femaleClothingTop = new string[]
+	{
+		"models/citizen_clothes/dress/dress.kneelength.vmdl",
+		"models/citizen_clothes/dress/posh_dress/models/posh_dress.vmdl",
+	};
+
+	static string[] maleClothingTop = new string[]
+	{
+		"models/citizen_clothes/jacket/jacket.red.vmdl",
+		"models/citizen_clothes/jacket/hoodie/models/hoodie.vmdl",
+	};
+
+	static string[] maleClothingBottom = new string[]
+	{
+		"models/citizen_clothes/trousers/trousers.jeans.vmdl",
+	};
+
+	static string[] shoes = new string[]
+	{
+		"models/citizen_clothes/shoes/trainers/trainers.vmdl",
+		"models/citizen_clothes/shoes/sneakers/models/sneakers.vmdl",
 	};
 
 	public void SetIdentity()
@@ -55,9 +87,20 @@ public partial class BLPawn
 		bool canTakeName = false;
 		int attempts = 3;
 
-		if( BLCurTeam == BLTeams.Hunter )
+		if( oldClothing.Count() > 0)
+		{
+			foreach ( var item in oldClothing )
+			{
+				item.Delete();
+			}
+
+			oldClothing.Clear();
+		}
+
+		if ( BLCurTeam == BLTeams.Hunter )
 		{
 			Identity = IdentityEnum.Hunter;
+			
 			while ( !canTakeName )
 			{
 				string name = hunterNames[Rand.Int( 0, hunterNames.Length - 1 )];
@@ -77,6 +120,21 @@ public partial class BLPawn
 				}
 			}
 
+			ModelEntity hunterOutfit = new ModelEntity( "models/citizen_clothes/shirt/priest_shirt/models/priest_shirt.vmdl" );
+			hunterOutfit.SetParent( this, true );
+			hunterOutfit.EnableHideInFirstPerson = true;
+
+			ModelEntity hunterbottom = new ModelEntity( "models/citizen_clothes/trousers/trousers.smart.vmdl" );
+			hunterbottom.SetParent( this, true );
+			hunterbottom.EnableHideInFirstPerson = true;
+			
+			ModelEntity hunterBoots = new ModelEntity( "models/citizen_clothes/shoes/smartshoes/smartshoes.vmdl" );
+			hunterBoots.SetParent( this, true );
+			hunterBoots.EnableHideInFirstPerson = true;
+
+			oldClothing.Add( hunterOutfit );
+			oldClothing.Add( hunterbottom );
+			oldClothing.Add( hunterBoots );
 			return;
 		}
 		
@@ -104,6 +162,17 @@ public partial class BLPawn
 					break;
 				}
 			}
+
+			ModelEntity topOutfit = new ModelEntity( maleClothingTop[Rand.Int( 0, maleClothingTop.Length - 1 )] );
+			topOutfit.SetParent( this, true );
+			topOutfit.EnableHideInFirstPerson = true;
+
+			ModelEntity bottomOutfit = new ModelEntity( maleClothingBottom[Rand.Int( 0, maleClothingBottom.Length - 1 )] );
+			bottomOutfit.SetParent( this, true );
+			bottomOutfit.EnableHideInFirstPerson = true;
+
+			oldClothing.Add( topOutfit );
+			oldClothing.Add( bottomOutfit );
 		} 
 		else if (randInt == 2)
 		{
@@ -126,8 +195,25 @@ public partial class BLPawn
 					break;
 				}
 			}
+
+			ModelEntity femHair = new ModelEntity( femaleHair[Rand.Int( 0, femaleHair.Length - 1 )] );
+			femHair.SetParent( this, true );
+			femHair.EnableHideInFirstPerson = true;
+
+			ModelEntity femTop = new ModelEntity( femaleClothingTop[Rand.Int( 0, femaleClothingTop.Length - 1 )] );
+			femTop.SetParent( this, true );
+			femTop.EnableHideInFirstPerson = true;
+
+			oldClothing.Add( femHair );
+			oldClothing.Add( femTop );
 		}
 
+		ModelEntity boots = new ModelEntity();
+		boots.SetModel( shoes[Rand.Int( 0, shoes.Length - 1 )] );
+		boots.SetParent( this, true );
+		boots.EnableHideInFirstPerson = true;
+
+		oldClothing.Add( boots );
 	}
 }
 

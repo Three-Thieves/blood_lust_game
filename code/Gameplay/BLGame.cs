@@ -23,6 +23,7 @@ public partial class BLGame : Game
 		{
 			_ = new BLHud();
 			postProcess = new StandardPostProcess();
+			PostProcess.Add( postProcess );
 		}
 	}
 
@@ -37,7 +38,10 @@ public partial class BLGame : Game
 		if ( IsClient )
 		{
 			_ = new BLHud();
+			PostProcess.Remove( postProcess );
+
 			postProcess = new StandardPostProcess();
+			PostProcess.Add( postProcess );
 		}
 	}
 
