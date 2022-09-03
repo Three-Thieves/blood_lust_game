@@ -21,7 +21,7 @@ public class BLHud : RootPanel
 
 		AddChild<DamageIndicator>();
 
-		AddChild<ChatBox>();
+		AddChild<BLChat>();
 
 		AddChild<Scoreboard<ScoreboardEntry>>();
 		AddChild<Vitals>();

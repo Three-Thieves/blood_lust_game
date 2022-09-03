@@ -25,7 +25,7 @@ public class BLAmmoBase : ModelEntity, IUse
 
 	public bool IsUsable( Entity user )
 	{
-		return true;
+		return BLGame.CurrentState == BLGame.GameStates.Active;
 	}
 
 	public bool OnUse( Entity user )

@@ -47,6 +47,12 @@ public partial class BLGame
 
 			postProcess.Saturate.Amount = healthDelta;
 
+			if(player.Health <= 30.0f && player.Health > 0)
+			{
+				postProcess.FilmGrain.Intensity = 0.5f;
+				postProcess.FilmGrain.Response = 0.85f;
+			}
+
 		}
 
 

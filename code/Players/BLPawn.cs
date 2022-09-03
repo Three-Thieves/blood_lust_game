@@ -13,6 +13,8 @@ partial class BLPawn : Player
 
 	float timeToResurrect = 15.0f;
 
+	Sound nearDeathSnd;
+
 	[Net]
 	public float MaxHealth { get; set; } = 100;
 
@@ -42,6 +44,7 @@ partial class BLPawn : Player
 		Animator = new StandardPlayerAnimator();
 
 		CurTeam = BLTeams.Spectator;
+		LastTeam = BLTeams.Unknown;
 
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
@@ -173,7 +176,7 @@ partial class BLPawn : Player
 		SimulateFlashlight();
 
 		if(CurTeam != BLTeams.Vampire && IsServer)
-			DoHeartbeat( To.Single( this ), Health > 0 && Health <= 30.0f );
+			SimulateNearDeath( To.Single( this ), Health > 0 && Health <= 30.0f );
 
 		if ( Input.Pressed( InputButton.Drop ) )
 		{	
@@ -266,8 +269,6 @@ partial class BLPawn : Player
 		Corpse = ent;
 	}
 
-	Sound nearDeathSnd;
-
 	public override void TakeDamage( DamageInfo info )
 	{
 		if ( BLGame.CurrentState != BLGame.GameStates.Active )
@@ -289,15 +290,22 @@ partial class BLPawn : Player
 	}
 
 	[ClientRpc]
-	public void DoHeartbeat(bool lowHP)
+	public void SimulateNearDeath(bool lowHP)
 	{
 		if ( !nearDeathSnd.Finished )
 			return;
 
-		if ( lowHP  )
+		if ( lowHP )
+		{
 			nearDeathSnd = PlaySound( "heartbeat" );
+			Audio.ReverbVolume = 10.0f;
+			Audio.SetEffect( "core.player.death.muffle1", 25.0f );
+		}
 		else
+		{
 			nearDeathSnd.Stop();
+			Audio.ReverbVolume = 0.0f;
+		}
 	}
 
 	[ClientRpc]
