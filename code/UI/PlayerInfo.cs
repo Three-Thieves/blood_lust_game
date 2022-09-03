@@ -44,7 +44,14 @@ public class PlayerInfo : Panel
 			return;
 		}
 
-		var clTr = Trace.Ray( pawn.EyePosition, pawn.EyePosition + pawn.EyeRotation.Forward * 150 )
+		TraceResult clTr;
+
+		if ( pawn.BLCurTeam == BLPawn.BLTeams.Vampire )
+			clTr = Trace.Ray( pawn.EyePosition, pawn.EyePosition + pawn.EyeRotation.Forward * 1000 )
+			.Ignore( pawn )
+			.Run();
+		else
+			clTr = Trace.Ray( pawn.EyePosition, pawn.EyePosition + pawn.EyeRotation.Forward * 150 )
 			.Ignore( pawn )
 			.Run();
 

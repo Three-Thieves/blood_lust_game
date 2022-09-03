@@ -275,7 +275,7 @@ public partial class BLInventory : IBaseInventory
 		foreach ( var item in List )
 		{
 			if ( item is BLWeaponsBase wep && !wep.IsDroppable )
-				continue;
+				return;
 
 			if ( !Contains( item ) )
 				return;

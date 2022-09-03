@@ -9,6 +9,7 @@ partial class BLPawn : Player
 	TimeSince timeSinceDropped;
 	DamageInfo lastDMGInfo;
 	TimeUntil timeUntilResurrection;
+	public TimeSince TimeSinceDamage { get; private set; } = 1.0f;
 
 	float timeToResurrect = 15.0f;
 
@@ -44,7 +45,7 @@ partial class BLPawn : Player
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
 
-		if (BLGame.CurrentState != BLGame.GameStates.Active)
+		if (BLGame.CurrentState != BLGame.GameStates.Active && BLGame.CurrentState != BLGame.GameStates.Start)
 		{
 			CameraMode = new FirstPersonCamera();
 			EnableDrawing = true;
@@ -52,7 +53,7 @@ partial class BLPawn : Player
 		} 
 		else
 		{
-			CameraMode = new DevCamera();
+			CameraMode = new SpectatorCamera();
 			EnableDrawing = false;
 			EnableAllCollisions = false;
 		}
@@ -104,8 +105,6 @@ partial class BLPawn : Player
 		if ( wFlash.IsValid )
 			DeleteFlashlight();
 
-		DoHeartbeat( To.Single( this ), false );
-
 		CreatePlayerFlashlight();
 
 		if ( BLGame.CurrentState == BLGame.GameStates.Active )
@@ -118,6 +117,8 @@ partial class BLPawn : Player
 			EnableDrawing = true;
 			EnableAllCollisions = true;
 		}
+
+		Skills.Clear();
 	}
 
 	public void Resurrect()
@@ -171,6 +172,9 @@ partial class BLPawn : Player
 
 		TickPlayerUse();
 		SimulateFlashlight();
+		
+		if(BLCurTeam != BLTeams.Vampire)
+			DoHeartbeat( To.Single( this ), Health > 0 && Health <= 30.0f );
 
 		if ( Input.Pressed( InputButton.Drop ) )
 		{	
@@ -203,6 +207,9 @@ partial class BLPawn : Player
 		if ( other is BLWeaponsBase wep )
 		{
 			if ( wep is HunterStake && BLCurTeam == BLTeams.Vampire )
+				return;
+
+			if ( wep is Stake && BLCurTeam == BLTeams.Hunter )
 				return;
 
 			Backpack.Add( wep );
@@ -280,16 +287,18 @@ partial class BLPawn : Player
 		lastDMGInfo = info;
 
 		TookDamage( To.Single( this ) );
-	
-		DoHeartbeat( To.Single( this ), Health <= 30.0f );
-		
+		TimeSinceDamage = 0;
+
 		base.TakeDamage( info );
 	}
 
 	[ClientRpc]
 	public void DoHeartbeat(bool lowHP)
 	{
-		if ( lowHP )
+		if ( !nearDeathSnd.Finished )
+			return;
+
+		if ( lowHP  )
 			nearDeathSnd = PlaySound( "heartbeat" );
 		else
 			nearDeathSnd.Stop();
@@ -300,7 +309,7 @@ partial class BLPawn : Player
 	{
 		//DebugOverlay.Sphere( pos, 10.0f, Color.Red, true, 10.0f );
 
-		DamageIndicator.Current.OnHit( );
+		DamageIndicator.Current?.OnHit();
 	}
 
 	protected override void UseFail()
@@ -312,15 +321,13 @@ partial class BLPawn : Player
 	{
 		base.OnKilled();
 
-		DoHeartbeat( To.Single( this ), false );
-
 		EnableDrawing = false;
 		EnableAllCollisions = false;
 
 		if ( BLCurTeam == BLTeams.Vampire )
 			CameraMode = new SpectateRagdollCamera();
 		else
-			CameraMode = new DevCamera();
+			CameraMode = new SpectatorCamera();
 
 		if(Backpack.Count() > 0)
 			Backpack.DropContents();

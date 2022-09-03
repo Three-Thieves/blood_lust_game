@@ -21,8 +21,8 @@ public partial class DamageIndicator : Panel
 	{
 		public HitPoint()
 		{
-			StyleSheet.Load( "/UI/Styles/damageindicator.sccs" );
-			_ = Lifetime();
+			StyleSheet.Load( "/UI/Styles/damageindicator.scss" );
+			//_ = Lifetime();
 		}
 
 		async Task Lifetime()

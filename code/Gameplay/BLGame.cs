@@ -22,6 +22,7 @@ public partial class BLGame : Game
 		if(IsClient)
 		{
 			_ = new BLHud();
+			postProcess = new StandardPostProcess();
 		}
 	}
 
@@ -36,6 +37,7 @@ public partial class BLGame : Game
 		if ( IsClient )
 		{
 			_ = new BLHud();
+			postProcess = new StandardPostProcess();
 		}
 	}
 

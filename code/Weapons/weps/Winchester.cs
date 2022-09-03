@@ -15,7 +15,7 @@ partial class Winchester : BLWeaponsBase
 	public override AmmoType AmmoType => AmmoType.Rifle;
 	public override int ClipSize => 14;
 	public override float ReloadTime => 1.5f;
-	public override int Bucket => 2;
+	public override int Bucket => 3;
 	public override int BucketWeight => 200;
 
 	[Net, Predicted]
@@ -45,11 +45,6 @@ partial class Winchester : BLWeaponsBase
 		if ( !TakeAmmo( 1 ) )
 		{
 			DryFire();
-
-			if ( AvailableAmmo() > 0 )
-			{
-				Reload();
-			}
 			return;
 		}
 

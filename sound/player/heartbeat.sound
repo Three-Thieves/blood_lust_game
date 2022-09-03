@@ -12,7 +12,7 @@
 		[
 			resource:"sound/raw/heartbeat.vsnd",
 		]
-		SelectionMode = 3
+		SelectionMode = "Random"
 		MaximumDistance = 122.77009
 		MinimumDistance = 6.138505
 	}

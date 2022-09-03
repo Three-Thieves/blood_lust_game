@@ -29,7 +29,6 @@ partial class DoubleBarrel : BLWeaponsBase
 	public override void Simulate( Client owner )
 	{
 		base.Simulate( owner );
-
 	}
 
 	public override void AttackPrimary()
@@ -40,11 +39,6 @@ partial class DoubleBarrel : BLWeaponsBase
 		if ( !TakeAmmo( 1 ) )
 		{
 			DryFire();
-
-			if ( AvailableAmmo() > 0 )
-			{
-				Reload();
-			}
 			return;
 		}
 
@@ -54,7 +48,7 @@ partial class DoubleBarrel : BLWeaponsBase
 		// Tell the clients to play the shoot effects
 		//
 		ShootEffects();
-		PlaySound( "rust_pumpshotgun.shoot" );
+		PlaySound( "shotgun_fire" );
 
 		//
 		// Shoot the bullets

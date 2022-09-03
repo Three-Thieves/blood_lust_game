@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
+using Sandbox.Component;
 
 public partial class BLPawn
 {
@@ -18,6 +20,10 @@ public partial class BLPawn
 
 	[Net]
 	public int BloodLevel { get; set; }
+
+	[Net]
+	public List<BLBaseSkill> Skills { get; set; } = new List<BLBaseSkill>();
+
 	public void SetUpVampire()
 	{
 		BloodBar = 128.0f;
