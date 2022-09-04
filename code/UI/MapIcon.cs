@@ -13,6 +13,8 @@ class MapIcon : Panel
 
 	public MapIcon( string fullIdent )
 	{
+		StyleSheet.Load( "UI/Styles/MapIcon.scss" );
+		SetTemplate( "UI/HTML/MapIcon.html" );
 		Ident = fullIdent;
 
 		_ = FetchMapInformation();

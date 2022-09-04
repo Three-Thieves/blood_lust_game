@@ -11,7 +11,7 @@ public partial class BLGame : Game
 
 	public static GameStates CurrentState => Instance?.GameState ?? GameStates.Idle;
 
-	public int MaxRounds { get; private set; } = 8;
+	public int MaxRounds { get; set; }
 
 	[Net]
 	public int CurRound { get; protected set; } = 1;

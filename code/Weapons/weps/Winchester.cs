@@ -50,14 +50,14 @@ partial class Winchester : BLWeaponsBase
 
 	public override void AttackPrimary()
 	{
-		TimeSincePrimaryAttack = 0;
-		TimeSinceSecondaryAttack = 0;
-
 		if ( !TakeAmmo( 1 ) )
 		{
 			DryFire();
 			return;
 		}
+
+		TimeSincePrimaryAttack = 0;
+		TimeSinceSecondaryAttack = 0;
 
 		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
 

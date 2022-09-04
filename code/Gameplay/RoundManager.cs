@@ -18,6 +18,8 @@ public partial class BLGame
 	public List<string> takenFemaleNames;
 	public List<string> takenHunterNames;
 
+	MapVoteEntity mapVote;
+
 	public IList<BLPawn> GetTeamMembers( BLPawn.BLTeams teamType )
 	{
 		IList<BLPawn> teamMembers = new List<BLPawn>();
@@ -65,7 +67,9 @@ public partial class BLGame
 
 		All.OfType<BLPawn>().ToList().ForEach( x =>
 		{
+			MoveToSpawnpoint( x );
 			x.Respawn();
+			x.Backpack.DeleteContents();
 			x.GiveHands();
 			x.UpdatePlayerTeam( BLPawn.BLTeams.Spectator );
 		} );
@@ -142,6 +146,11 @@ public partial class BLGame
 		if ( StateTimer > 0.0f )
 			return;
 		
+		if(GameState == GameStates.MapVote)
+		{
+			Global.ChangeLevel( mapVote.WinningMap );
+		}
+
 		if ( GameState == GameStates.Idle )
 		{
 			StartRound();
@@ -162,8 +171,23 @@ public partial class BLGame
 		}
 
 		if ( GameState == GameStates.Post )
+		{
+			if ( CurRound > MaxRounds )
+			{
+				Log.Info( "ROUNDS EXCEED MAX, starting map vote" );
+				GameState = GameStates.MapVote;
+
+				mapVote = new MapVoteEntity();
+				mapVote.VoteTimeLeft = 20.0f;
+
+				PlayGameplaySounds("mapvote");
+
+				StateTimer = mapVote.VoteTimeLeft;
+				return;
+			}
+
 			StartRound();
-		
+		}
 	}
 
 	public void EndRound(WinningEnum winningTeam)
@@ -190,18 +214,6 @@ public partial class BLGame
 		SetEndResultsClient( To.Everyone, winningTeam );
 
 		CurRound++;
-
-		/*if ( CurRound >= MaxRounds && IsServer )
-		{
-			Log.Info( "ROUNDS EXCEED MAX, starting map vote" );
-			GameState = GameStates.MapVote;
-
-			var mapVote = new MapVoteEntity();
-			mapVote.VoteTimeLeft = 20.0f;
-
-			StateTimer = mapVote.VoteTimeLeft;
-			Global.ChangeLevel( mapVote.WinningMap );
-		}*/
 	}
 
 	[ClientRpc]

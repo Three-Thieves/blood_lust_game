@@ -17,6 +17,8 @@ public partial class BLGame : Game
 			takenMaleNames = new();
 			takenFemaleNames = new();
 			takenHunterNames = new();
+
+			MaxRounds = 8;
 		}
 
 		if(IsClient)
@@ -47,7 +49,7 @@ public partial class BLGame : Game
 
 	public override void PostLevelLoaded()
 	{
-		AdjustMapEnvironment();
+		//AdjustMapEnvironment();
 	}
 
 	public override void ClientDisconnect( Client cl, NetworkDisconnectionReason reason )
@@ -90,6 +92,8 @@ public partial class BLGame : Game
 		client.Pawn = pawn;
 
 		pawn.Spawn();
+
+		MoveToSpawnpoint( pawn );
 
 		if ( HasEnoughPlayers() && GameState == GameStates.Waiting )
 		{

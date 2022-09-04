@@ -10,7 +10,7 @@ class MapVotePanel : Panel
 {
 	public string TitleText { get; set; } = "Map Vote";
 	public string SubtitleText { get; set; } = "Select next map";
-	public string TimeText { get; set; } = "00:33";
+	public string TimeText { get; set; } = "00:23";
 
 	public Panel Body { get; set; }
 
@@ -18,6 +18,8 @@ class MapVotePanel : Panel
 
 	public MapVotePanel()
 	{
+		StyleSheet.Load( "UI/Styles/MapVotePanel.scss" );
+		SetTemplate( "UI/HTML/MapVotePanel.html" );
 		_ = PopulateMaps();
 	}
 
@@ -30,7 +32,7 @@ class MapVotePanel : Panel
 			Take = 16,
 		};
 
-		query.Tags.Add( "game:rifter.bloodlust" );
+		query.Tags.Add( "game:thieves.bloodlust" );
 
 		var packages = await query.RunAsync( default );
 

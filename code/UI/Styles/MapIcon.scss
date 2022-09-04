@@ -1,6 +1,6 @@
 ﻿
-$yellow: #ff0;
-$orange: #f70;
+$black: #000000;
+$red: #a50000;
 
 mapicon
 {
@@ -12,8 +12,8 @@ mapicon
     width: 400px;
     cursor: pointer;
     opacity: 0.7;
-    color: $yellow;
-    text-shadow: 0px 0px 10px $orange;
+    color: $black;
+    text-shadow: 0px 0px 10px $red;
 
     &:hover
     {
@@ -74,7 +74,7 @@ mapicon
             margin-left: 50px;
             font-size: 13px;
             opacity: 0.5;
-            text-shadow: 0px 0px 4px rgba( $orange, 0.2 );
+            text-shadow: 0px 0px 4px rgba( $red, 0.2 );
             mix-blend-mode: lighten;
         }
     }

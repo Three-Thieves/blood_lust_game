@@ -30,6 +30,9 @@ public partial class BLItemBase : ModelEntity, IUse
 
 	public bool IsUsable( Entity user )
 	{
+		if ( BLGame.CurrentState != BLGame.GameStates.Active )
+			return false;
+
 		var player = user as BLPawn;
 
 		if ( player.CurTeam == BLPawn.BLTeams.Vampire && RepelUndead )

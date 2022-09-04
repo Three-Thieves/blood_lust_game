@@ -78,8 +78,12 @@ public partial class RoundRoleTeller : Panel
 		if ( player == null )
 			return;
 
-		if (BLGame.CurrentState == BLGame.GameStates.Post)
+		if ( BLGame.CurrentState != BLGame.GameStates.Start )
+		{
+			SetClass( "showMenu", false );
 			lastAdvice = null;
+			return;
+		}
 
 		int totalVamps = BLGame.Instance.GetTeamMembers(BLPawn.BLTeams.Vampire).Count();
 		int totalHunters = BLGame.Instance.GetTeamMembers( BLPawn.BLTeams.Hunter ).Count();

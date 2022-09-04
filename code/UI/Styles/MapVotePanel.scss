@@ -1,6 +1,6 @@
 ﻿
-$yellow: #ff0;
-$orange: #f70;
+$black: #000000;
+$red: #a50000;
 
 mapvotepanel
 {
@@ -22,40 +22,34 @@ mapvotepanel > .inner
     flex-grow: 1;
 }
 
-mapvotepanel > .inner > .header
-{
+mapvotepanel > .inner > .header {
     flex-direction: row;
 
-    .left
-    {
+    .left {
         flex-grow: 1;
         flex-direction: column;
 
-        .title
-        {
+        .title {
             font-size: 50px;
             font-weight: bold;
-            color: $yellow;
-            text-shadow: 0px 0px 10px $orange;
+            color: $black;
+            text-shadow: 0px 0px 10px $red;
         }
 
-        .subtitle
-        {
+        .subtitle {
             font-size: 24px;
             font-weight: bold;
-            color: $yellow;
-            text-shadow: 0px 0px 7px $orange;
+            color: $black;
+            text-shadow: 0px 0px 7px $red;
         }
     }
 
-    .right
-    {
-        .countdown
-        {
+    .right {
+        .countdown {
             font-size: 50px;
             font-weight: bold;
-            color: $yellow;
-            text-shadow: 0px 0px 10px $orange;
+            color: $black;
+            text-shadow: 0px 0px 10px $red;
         }
     }
 }

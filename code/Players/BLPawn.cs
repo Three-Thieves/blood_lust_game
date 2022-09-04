@@ -30,6 +30,8 @@ partial class BLPawn : Player
 
 	public override void Spawn()
 	{
+		Host.AssertServer();
+
 		CreateHull();
 		oldClothing = new List<ModelEntity>();
 
@@ -66,7 +68,6 @@ partial class BLPawn : Player
 		}
 
 		CreatePlayerFlashlight();
-		BLGame.Instance.MoveToSpawnpoint( this );
 	}
 
 	public void GiveHands()
@@ -92,7 +93,6 @@ partial class BLPawn : Player
 		CreateHull();
 		ClearAmmo();
 
-		BLGame.Instance.MoveToSpawnpoint( this );
 		ResetInterpolation();
 
 		hat?.Delete();

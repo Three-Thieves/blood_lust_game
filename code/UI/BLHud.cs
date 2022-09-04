@@ -15,7 +15,6 @@ public class BLHud : RootPanel
 		}
 
 		StyleSheet.Load( "/UI/Styles/blhud.scss" );
-		SetTemplate( "/UI/HTML/hud.html" );
 
 		Current = this;
 

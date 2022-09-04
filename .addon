@@ -94,6 +94,17 @@
     },
     "ControlModes": {
       "Keyboard": true
+    },
+    "GameSettings": {
+      "bl_maxrounds": {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "bl_maxrounds",
+        "DisplayName": "Round Limit",
+        "DefaultValue": "6",
+        "Minimum": 6,
+        "Maximum": 30
+      }
     }
   }
 }

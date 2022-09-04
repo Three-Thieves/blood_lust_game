@@ -39,14 +39,14 @@ partial class DoubleBarrel : BLWeaponsBase
 
 	public override void AttackPrimary()
 	{
-		TimeSincePrimaryAttack = 0;
-		TimeSinceSecondaryAttack = 0;
-
 		if ( !TakeAmmo( 1 ) )
 		{
 			DryFire();
 			return;
 		}
+
+		TimeSincePrimaryAttack = 0;
+		TimeSinceSecondaryAttack = 0;
 
 		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
 
@@ -64,14 +64,14 @@ partial class DoubleBarrel : BLWeaponsBase
 
 	public override void AttackSecondary()
 	{
-		TimeSincePrimaryAttack = -0.5f;
-		TimeSinceSecondaryAttack = -0.5f;
-
 		if ( !TakeAmmo( 2 ) )
 		{
 			DryFire();
 			return;
 		}
+
+		TimeSincePrimaryAttack = -0.5f;
+		TimeSinceSecondaryAttack = -0.5f;
 
 		(Owner as AnimatedEntity).SetAnimParameter( "b_attack", true );
 

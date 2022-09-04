@@ -50,6 +50,13 @@ public partial class BLGame
 	[ConCmd.Admin("bl_round_restart")]
 	public static void CMD_RestartRound()
 	{
-		BLGame.Instance.EndRound(WinningEnum.Draw);
+		Instance.EndRound(WinningEnum.Draw);
+	}
+
+	[ConCmd.Admin( "bl_mapvote" )]
+	public static void CMD_StartMapVote()
+	{
+		Instance.CurRound = Instance.MaxRounds + 1;
+		Instance.EndRound( WinningEnum.Draw );
 	}
 }
