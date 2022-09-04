@@ -39,6 +39,12 @@ partial class Shotgun : BLWeaponsBase
 		AmmoClip = ClipSize;
 	}
 
+	[ClientRpc]
+	public override void DryFire()
+	{
+		PlaySound( "primary_dryfire" );
+	}
+
 	public override void Simulate( Client owner )
 	{
 		base.Simulate( owner );
@@ -70,7 +76,7 @@ partial class Shotgun : BLWeaponsBase
 		//
 		// Shoot the bullets
 		//
-		ShootBullet( 0.5f, 0.75f, 20.0f, 1.5f, 4 );
+		ShootBullet( 0.4f, 0.75f, 20.0f, 1.5f, 4 );
 	}
 
 	public override void AttackSecondary()

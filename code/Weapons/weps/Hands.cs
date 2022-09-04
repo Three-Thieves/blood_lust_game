@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox;
 
+[Library("bl_hands")]
+[HideInEditor]
 public partial class Hands : BLWeaponsBase
 {
 	public static Model WorldModel = null;

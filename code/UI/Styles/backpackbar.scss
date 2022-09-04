@@ -1,8 +1,8 @@
 ﻿backpackbar
 {
 	position: absolute;
-	left: 200px;
-	top: 80px;
+	left: 45%;
+	top: 15%;
 	font-family: Roboto;
 	opacity: 0;
 	transition: all 0.2s ease-out;
@@ -10,31 +10,28 @@
 
 	&.active
 	{
-		top: 100px;
+		bottom: 100px;
 		transition: all 0.1s ease-out;
 		opacity: 1;
 	}
 }
 
-backpackcolumn
-{
+backpackcolumn {
 	margin-right: 5px;
-	color: #fc0;
+	color: #a30f0f;
 	flex-direction: column;
 	align-items: flex-start; // align to the left, don't stretch
 
-	.slot-number
-	{
-		background-color: #fa02;
+	/*.slot-number {
+		background-color: #a30f0f;
 		padding: 15px 15px 0px 10px;
 		font-size: 20px;
 		font-weight: bolder;
 		width: 40px;
 		height: 40px;
-	}
+	}*/
 
-	backpackicon
-	{
+	backpackicon {
 		opacity: 1;
 		padding: 25px 15px 10px 2px;
 		width: 40px;
@@ -42,84 +39,100 @@ backpackcolumn
 		overflow: hidden;
 		transition: all 0.1s ease-out;
 
-		.icon
-		{
+		.icon {
 			opacity: 0;
 		}
 	}
 
 	opacity: 0.4;
 
-	&.active
-	{
+	&.active {
 		opacity: 1;
 
-		backpackicon
-		{
+		backpackicon {
 			transition: all 0.1s ease-out;
 			opacity: 0.2;
 			display: flex;
 			width: 200px;
 			height: 90px;
 
-			.icon
-			{
+			.icon {
 				opacity: 1;
 			}
 
-			&.active
-			{
+			&.active {
 				opacity: 1;
 			}
 		}
 	}
 }
 
-backpackicon
-{
+backpackicon {
 	margin-top: 5px;
 	mix-blend-mode: lighten;
-	color: #fc0;
-	background-color: #fa02;
+	color: #a30f0f;
+	background-color: #a30f0f;
 	font-size: 40px;
 	font-weight: lighter;
 	padding: 10px;
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
-	border: 1px solid rgba( #fa0, 0.08 );
+	border: 1px solid rgba( #140000, 0.08 );
 	border-radius: 3px;
 
-	.icon
-	{
+	.icon {
 		width: 150px;
 		height: 150px;
 		background-size: 100%;
-		background-image-tint: #fa0;
+		background-image-tint: #ff0000;
 		position: absolute;
 	}
 
-	&.active
-	{
+	&.active {
 		opacity: 1;
 
-		.icon
-		{
+		.icon {
 			// filter: drop-shadow additive glow
 			opacity: 1;
 		}
 	}
 
-	&.empty
-	{
+	&.empty {
 		opacity: 0.5;
 		background-color: #c004;
 		color: #f002;
 
-		.icon
-		{
+		.icon {
 			background-color: #f50;
 		}
 	}
 }
 
+.bl_hands .icon {
+	background-image: url(ui/bl_hands.png);
+}
+
+.bl_rifle .icon {
+	background-image: url(ui/bl_winchester.png);
+}
+
+.bl_fangs .icon {
+	background-image: url(ui/bl_fangs.png);
+}
+
+.bl_stake .icon {
+	background-image: url(ui/bl_stake.png);
+}
+
+.bl_hunter_stake .icon {
+	background-image: url(ui/bl_stake.png);
+}
+
+.bl_doublebarrel .icon {
+	background-image: url(ui/bl_dbshotgun.png);
+}
+
+.bl_shotgun .icon {
+	background-image: url(ui/bl_shotgun.png);
+}

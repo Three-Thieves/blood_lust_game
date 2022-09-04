@@ -13,7 +13,8 @@ public partial class BLPawn : Player
 		Spectator,
 		Human,
 		Hunter,
-		Vampire
+		Vampire,
+		Turned
 	}
 
 	public enum StatusEnum

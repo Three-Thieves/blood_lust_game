@@ -25,11 +25,14 @@ public partial class BLPawn
 			wFlash.Transform = transform;
 		}
 
+		if ( Health <= 0 )
+			return;
+
 		if ( TimeSinceLightToggled > 0.25f && Input.Pressed( InputButton.Flashlight ) )
 		{
 			FlashlightEnabled = !FlashlightEnabled;
 
-			PlaySound( FlashlightEnabled ? "flashlight-on" : "flashlight-off" );
+			PlaySound( "flashlight_toggle" );
 
 			if ( wFlash.IsValid() )
 				wFlash.Enabled = FlashlightEnabled;

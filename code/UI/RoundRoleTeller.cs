@@ -14,6 +14,7 @@ public partial class RoundRoleTeller : Panel
 		"Be careful of who you trust",
 		"Trust the hunter but make sure they trust you",
 		"if you know someone is a vampire, make sure you stake their heart",
+		"After you killed someone, are you sure they're really dead?",
 	};
 
 	string[] randAdviceVampire = new string[]
@@ -21,13 +22,15 @@ public partial class RoundRoleTeller : Panel
 		"Don't get caught by other humans when feeding",
 		"Feed from dead human corpses to regain health and obtain blood points",
 		"You can resurrect when downed after some time unless you get staked",
+		"Bite your victims from behind, its more effective to strike them",
+		"Search for blood bags, they replenish health and gives you blood points"
 	};
 
 	string[] randAdviceHunter = new string[]
 	{
 		"Your stake won't break when striking hearts of dead corpses",
 		"Stick with your fellow hunters",
-		"You are distinguished between humans, be careful of vampires who may strike at a bad time",
+		"Stay sharp, vampires may strike if you are a lone hunter",
 	};
 
 	public Panel TellerPnl;

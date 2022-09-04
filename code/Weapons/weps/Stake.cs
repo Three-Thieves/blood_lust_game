@@ -71,6 +71,8 @@ partial class Stake : BLWeaponsBase
 			}
 		}
 
+		PlaySound( "melee_swing" );
+
 		ViewModelEntity?.SetAnimParameter( "attack_has_hit", true );
 		ViewModelEntity?.SetAnimParameter( "attack", true );
 		ViewModelEntity?.SetAnimParameter( "holdtype_attack", false ? 2 : 1 );

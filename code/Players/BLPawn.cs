@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,9 @@ partial class BLPawn : Player
 {
 	TimeSince timeSinceDropped;
 	DamageInfo lastDMGInfo;
-	TimeUntil timeUntilResurrection;
+	
+	[Net]
+	public TimeUntil TimeUntilResurrect { get; set; }
 	public TimeSince TimeSinceDamage { get; private set; } = 1.0f;
 
 	float timeToResurrect = 15.0f;
@@ -70,13 +73,10 @@ partial class BLPawn : Player
 	{
 		Host.AssertServer();
 
-		var hands = new Hands();
-		if ( Backpack.Contains( hands ) )
-		{
-			hands.Delete();
-			return;
-		}
+		Backpack.DeleteContents();
+		Backpack.List.Clear();
 
+		var hands = new Hands();
 		Backpack.Add( hands );
 	}
 
@@ -97,8 +97,6 @@ partial class BLPawn : Player
 
 		hat?.Delete();
 		hat = null;
-
-		Backpack.DeleteContents();
 
 		RemoveAllDecals();
 
@@ -133,9 +131,6 @@ partial class BLPawn : Player
 		LifeState = LifeState.Alive;
 		Health = 25;
 
-		GiveHands();
-		Backpack.Add( new Fangs(), true );
-
 		if ( Corpse == null )
 			return;
 
@@ -163,7 +158,7 @@ partial class BLPawn : Player
 
 		if (CurTeam == BLTeams.Vampire && LifeState == LifeState.Dead && IsServer )
 		{
-			if(Input.Pressed(InputButton.PrimaryAttack) && timeUntilResurrection < 0.0f)
+			if(Input.Pressed(InputButton.PrimaryAttack) && TimeUntilResurrect < 0.0f)
 				Resurrect();
 
 			return;
@@ -200,6 +195,41 @@ partial class BLPawn : Player
 		controller?.Simulate( cl, this, GetActiveAnimator() );
 
 		SimulateActiveChild( cl, ActiveChild );
+	}
+
+	protected override Entity FindUsable()
+	{
+		var tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 85 )
+			.Ignore( this )
+			.Run();
+
+		// See if any of the parent entities are usable if we ain't.
+		var ent = tr.Entity;
+		while ( ent.IsValid() && !IsValidUseEntity( ent ) )
+		{
+			ent = ent.Parent;
+		}
+
+		// Nothing found, try a wider search
+		if ( !IsValidUseEntity( ent ) )
+		{
+			tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * 55 )
+			.Radius( 2 )
+			.Ignore( this )
+			.Run();
+
+			// See if any of the parent entities are usable if we ain't.
+			ent = tr.Entity;
+			while ( ent.IsValid() && !IsValidUseEntity( ent ) )
+			{
+				ent = ent.Parent;
+			}
+		}
+
+		// Still no good? Bail.
+		if ( !IsValidUseEntity( ent ) ) return null;
+
+		return ent;
 	}
 
 	public override void StartTouch( Entity other )
@@ -343,7 +373,7 @@ partial class BLPawn : Player
 		
 		if ( CurTeam == BLTeams.Vampire )
 		{
-			timeUntilResurrection = timeToResurrect;
+			TimeUntilResurrect = timeToResurrect;
 		}
 
 		//ClearAmmo();
@@ -355,6 +385,7 @@ partial class BLPawn : Player
 		}
 
 		Backpack.DropContents();
+		//Backpack.DeleteContents();
 	}
 
 	public override void PostCameraSetup( ref CameraSetup setup )

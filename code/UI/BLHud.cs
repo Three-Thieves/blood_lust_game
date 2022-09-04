@@ -21,7 +21,7 @@ public class BLHud : RootPanel
 
 		AddChild<DamageIndicator>();
 
-		AddChild<BLChat>();
+		//AddChild<BLChat>();
 
 		AddChild<Scoreboard<ScoreboardEntry>>();
 		AddChild<Vitals>();
@@ -30,6 +30,9 @@ public class BLHud : RootPanel
 		AddChild<RoundRoleTeller>();
 		AddChild<PlayerInfo>();
 
+		AddChild<DeathNotice>();
+
+		AddChild<ChatBox>();
 		AddChild<VoiceSpeaker>();
 		AddChild<VoiceList>();
 	}

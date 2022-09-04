@@ -3,17 +3,17 @@
 	data = 
 	{
 		UI = false
-		Volume = 0.5
+		Volume = 0.3
 		VolumeRandom = 0
 		Pitch = 1
 		PitchRandom = 0
-		Decibels = 155
+		Decibels = 135
 		Sounds = 
 		[
 			resource:"sound/raw/nova-1.vsnd",
 		]
 		SelectionMode = "Random"
-		MaximumDistance = 5483.878
-		MinimumDistance = 274.1939
+		MaximumDistance = 4167.7114
+		MinimumDistance = 208.38557
 	}
 }

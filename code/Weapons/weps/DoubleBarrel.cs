@@ -10,11 +10,11 @@ partial class DoubleBarrel : BLWeaponsBase
 {
 	public static readonly Model WorldModel = Model.Load( "models/weapons/w_doublebarrel.vmdl" );
 	public override string ViewModelPath => "models/weapons/v_doublebarrel.vmdl";
-	public override float PrimaryRate => 1;
-	public override float SecondaryRate => 1;
+	public override float PrimaryRate => 0.65f;
+	public override float SecondaryRate => 0.35f;
 	public override AmmoType AmmoType => AmmoType.Buckshot;
 	public override int ClipSize => 2;
-	public override float ReloadTime => 1.5f;
+	public override float ReloadTime => 1.35f;
 	public override int Bucket => 2;
 	public override int BucketWeight => 200;
 	public override SlotEnum Slot => SlotEnum.Primary;
@@ -29,6 +29,12 @@ partial class DoubleBarrel : BLWeaponsBase
 	public override void Simulate( Client owner )
 	{
 		base.Simulate( owner );
+	}
+
+	[ClientRpc]
+	public override void DryFire()
+	{
+		PlaySound( "primary_dryfire" );
 	}
 
 	public override void AttackPrimary()

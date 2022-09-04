@@ -14,13 +14,16 @@ partial class Winchester : BLWeaponsBase
 	public override float SecondaryRate => -1;
 	public override AmmoType AmmoType => AmmoType.Rifle;
 	public override int ClipSize => 7;
-	public override float ReloadTime => 1.5f;
-	public override int Bucket => 3;
+	public override float ReloadTime => 0.85f;
+	public override int Bucket => 2;
 	public override int BucketWeight => 200;
 	public override SlotEnum Slot => SlotEnum.Primary;
 
 	[Net, Predicted]
 	public bool StopReloading { get; set; }
+
+	[Net, Predicted]
+	bool PumpAction { get; set; } = false;
 
 	public override void Spawn()
 	{
@@ -30,12 +33,19 @@ partial class Winchester : BLWeaponsBase
 		AmmoClip = ClipSize;
 	}
 
+	[ClientRpc]
+	public override void DryFire()
+	{
+		PlaySound( "primary_dryfire" );
+	}
 	public override void Simulate( Client owner )
 	{
 		base.Simulate( owner );
 
 		if ( IsReloading && Input.Pressed( InputButton.PrimaryAttack ) )
 			StopReloading = true;
+		else if ( !IsReloading && PumpAction )
+			PumpAction = false;
 	}
 
 	public override void AttackPrimary()
@@ -109,6 +119,21 @@ partial class Winchester : BLWeaponsBase
 				FinishReload();
 			}
 		}
+	}
+
+	public override void Reload()
+	{
+		if ( AmmoClip <= 0 )
+			PumpAction = true;
+
+		base.Reload();
+	}
+
+	[ClientRpc]
+	public override void StartReloadEffects()
+	{
+		base.StartReloadEffects();
+		ViewModelEntity?.SetAnimParameter( "cockback", PumpAction );
 	}
 
 	[ClientRpc]

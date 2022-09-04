@@ -31,7 +31,13 @@ public partial class BLPawn
 		"Ben",
 		"Jonathan",
 		"Terry",
-		"Gabe"
+		"Gabe",
+		"Joe",
+		"Michael",
+		"Mike",
+		"Henry",
+		"Issac",
+		"Ciaran"
 	};
 
 	public static string[] femaleNames = new string[]
@@ -43,7 +49,11 @@ public partial class BLPawn
 		"Lisa", 
 		"Mina",
 		"Susan", 
-		"Samantha"
+		"Samantha",
+		"Catherine",
+		"Elisa",
+		"Zoey",
+		"Rochelle"
 	};
 
 	static string[] hunterNames = new string[]

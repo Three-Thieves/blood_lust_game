@@ -36,6 +36,9 @@ public partial class BLGame
 
 	public void CheckRoundStatus()
 	{
+		if ( CurrentState != GameStates.Start && CurrentState != GameStates.Active && CurrentState != GameStates.Post )
+			return;
+
 		var curHumans = GetTeamMembers( BLPawn.BLTeams.Human ).Count + GetTeamMembers(BLPawn.BLTeams.Hunter).Count;
 		var curVampire = GetTeamMembers( BLPawn.BLTeams.Vampire ).Count;
 	

@@ -291,10 +291,13 @@ public partial class BLInventory : IBaseInventory
 			if ( !Contains( item ) )
 				return;
 
+			if( item is BLWeaponsBase wep && !wep.IsDroppable )
+				continue;
+
 			item.Parent = null;
 
-			if ( item is BaseCarriable bc && item is BLWeaponsBase wep && wep.IsDroppable)
-				bc.OnCarryDrop( Owner );
+			if ( item is BaseCarriable bc )
+				bc.OnCarryDrop( Owner ); 
 		}
 
 		Active = null;

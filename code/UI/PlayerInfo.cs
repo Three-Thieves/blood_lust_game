@@ -12,7 +12,7 @@ public class PlayerInfo : Panel
 {
 	public Panel PlayerPnl;
 	public Label PlayerIdentity;
-	public Label PlayerDeathStement;
+	public Label PlayerDeathSettlement;
 
 	public PlayerInfo()
 	{
@@ -20,7 +20,7 @@ public class PlayerInfo : Panel
 
 		PlayerPnl = Add.Panel( "panel" );
 		PlayerIdentity = PlayerPnl.Add.Label( "???", "playerInfo" );
-		PlayerDeathStement = PlayerPnl.Add.Label( "", "stement" );
+		PlayerDeathSettlement = PlayerPnl.Add.Label( "", "stement" );
 	}
 
 	public override void Tick()
@@ -37,12 +37,6 @@ public class PlayerInfo : Panel
 
 		if ( pawn == null )
 			return;
-
-		if( pawn.Health <= 0 )
-		{
-			SetClass( "playerHover", false );
-			return;
-		}
 
 		TraceResult clTr;
 
@@ -65,7 +59,7 @@ public class PlayerInfo : Panel
 				team = "\nHunter";
 
 			PlayerIdentity.SetText( player.PlayerIdentity );
-			PlayerDeathStement.SetText( $"{team}" );
+			PlayerDeathSettlement.SetText( $"{team}" );
 		}
 		else if ( clTr.Entity is BLRagdoll corpse )
 		{
@@ -85,7 +79,7 @@ public class PlayerInfo : Panel
 				team = ",\nthey served humanity well";
 
 			PlayerIdentity.SetText( $"Here lies {corpse.CorpseName}" );
-			PlayerDeathStement.SetText( $"{isStaked}{team} " );
+			PlayerDeathSettlement.SetText( $"{isStaked}{team} " );
 		}
 		SetClass( "playerHover", clTr.Entity is BLPawn || clTr.Entity is BLRagdoll);
 

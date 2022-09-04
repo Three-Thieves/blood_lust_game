@@ -16,6 +16,8 @@ public class BackpackBar : Panel
 
 	public BackpackBar()
 	{
+		StyleSheet.Load( "UI/Styles/BackpackBar.scss" );
+
 		for ( int i = 0; i < 6; i++ )
 		{
 			var icon = new BackpackColumn( i, this );
@@ -87,7 +89,7 @@ public class BackpackBar : Panel
 			input.SuppressButton( InputButton.PrimaryAttack );
 			input.ActiveChild = SelectedWeapon;
 			IsOpen = false;
-			Sound.FromScreen( "dm.ui_select" );
+			Sound.FromScreen( "weapon_equip" );
 			return;
 		}
 
@@ -113,7 +115,7 @@ public class BackpackBar : Panel
 
 		if ( oldSelected != SelectedWeapon )
 		{
-			Sound.FromScreen( "dm.ui_tap" );
+			Sound.FromScreen( "select_weapon" );
 		}
 	}
 

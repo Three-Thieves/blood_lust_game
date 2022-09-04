@@ -16,7 +16,7 @@ public class BackpackColumn : Panel
 	{
 		Parent = parent;
 		Column = i;
-		Header = Add.Label( $"{i + 1}", "slot-number" );
+		Header = Add.Label( "", "slot-number" );
 	}
 
 	internal void UpdateWeapon( BLWeaponsBase weapon )
