@@ -29,6 +29,9 @@ public class BLHud : RootPanel
 		AddChild<BackpackBar>();
 		AddChild<RoundRoleTeller>();
 		AddChild<PlayerInfo>();
+
+		AddChild<VoiceSpeaker>();
+		AddChild<VoiceList>();
 	}
 
 	public override void Tick()

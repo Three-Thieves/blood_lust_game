@@ -39,7 +39,7 @@ public partial class BLGame
 				postProcess.Blur.Strength = damageUi * 0.5f;
 			}
 
-			postProcess.Blur.Enabled = player.Health <= 0 && CurrentState == GameStates.Active;
+			postProcess.Blur.Enabled = player.Health <= 0 && CurrentState == GameStates.Active && player.CurTeam != BLPawn.BLTeams.Spectator;
 
 			var healthDelta = player.Health.LerpInverse( 0, 100.0f, true );
 

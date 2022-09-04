@@ -16,6 +16,7 @@ partial class HunterStake : BLWeaponsBase
 	public override int BucketWeight => 200;
 	public override int Bucket => 0;
 
+	public override SlotEnum Slot => SlotEnum.Melee;
 	public override void Spawn()
 	{
 		base.Spawn();

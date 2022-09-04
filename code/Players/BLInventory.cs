@@ -99,6 +99,20 @@ public partial class BLInventory : IBaseInventory
 
 	}
 
+	public bool StripWeapon(Entity ent)
+	{
+		if ( !List.Contains( ent ) )
+			return false;
+
+		if ( Active == ent )
+			Active = null;
+
+		List.Remove( ent );
+		ent.Delete();
+
+		return true;
+	}
+
 	/// <summary>
 	/// A child has been added to the Owner (player). Do we want this
 	/// entity in our inventory? Yeah? Add it then.
@@ -274,7 +288,6 @@ public partial class BLInventory : IBaseInventory
 
 		foreach ( var item in List )
 		{
-			
 			if ( !Contains( item ) )
 				return;
 
@@ -284,6 +297,7 @@ public partial class BLInventory : IBaseInventory
 				bc.OnCarryDrop( Owner );
 		}
 
+		Active = null;
 		List.Clear();
 	}
 }

@@ -15,13 +15,12 @@
   "RootNamespace": "Sandbox",
   "Metadata": {
     "MapList": [
-      "facepunch.flatgrass",
-      "thieves.ttt_cluedo"
+      "thieves.nightclub"
     ],
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "RankType": "None",
-    "MapSelect": "Unrestricted",
+    "MapSelect": "Tagged",
     "GameNetworkType": "Multiplayer",
     "MaxPlayers": 24,
     "MinPlayers": 1,

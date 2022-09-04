@@ -17,7 +17,7 @@ partial class DoubleBarrel : BLWeaponsBase
 	public override float ReloadTime => 1.5f;
 	public override int Bucket => 2;
 	public override int BucketWeight => 200;
-
+	public override SlotEnum Slot => SlotEnum.Primary;
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -53,7 +53,7 @@ partial class DoubleBarrel : BLWeaponsBase
 		//
 		// Shoot the bullets
 		//
-		ShootBullet( 0.2f, 0.3f, 20.0f, 2.0f, 4 );
+		ShootBullet( 0.2f, 0.3f, 15.0f, 2.0f, 4 );
 	}
 
 	public override void AttackSecondary()
@@ -78,7 +78,7 @@ partial class DoubleBarrel : BLWeaponsBase
 		//
 		// Shoot the bullets
 		//
-		ShootBullet( 0.4f, 0.3f, 20.0f, 2.0f, 8 );
+		ShootBullet( 0.4f, 0.75f, 15.0f, 2.0f, 8 );
 	}
 
 	[ClientRpc]

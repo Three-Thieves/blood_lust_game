@@ -34,8 +34,6 @@ public class SpectatorCamera : CameraMode
 	public override void Deactivated()
 	{
 		base.Deactivated();
-
-		Local.Hud?.SetClass( "devcamera", false );
 	}
 
 	public override void Update()

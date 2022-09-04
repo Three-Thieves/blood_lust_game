@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,13 +16,14 @@ partial class Shotgun : BLWeaponsBase
 {
 	public static readonly Model WorldModel = Model.Load( "models/weapons/w_shotgun.vmdl" );
 	public override string ViewModelPath => "models/weapons/v_shotgun.vmdl";
-	public override float PrimaryRate => 1;
+	public override float PrimaryRate => 0.85f;
 	public override float SecondaryRate => 1;
 	public override AmmoType AmmoType => AmmoType.Buckshot;
 	public override int ClipSize => 7;
 	public override float ReloadTime => 0.75f;
 	public override int Bucket => 2;
 	public override int BucketWeight => 300;
+	public override SlotEnum Slot => SlotEnum.Primary;
 
 	[Net, Predicted]
 	bool InterruptReload { get; set; } = false;
@@ -36,6 +38,7 @@ partial class Shotgun : BLWeaponsBase
 		Model = WorldModel;
 		AmmoClip = ClipSize;
 	}
+
 	public override void Simulate( Client owner )
 	{
 		base.Simulate( owner );
@@ -43,9 +46,7 @@ partial class Shotgun : BLWeaponsBase
 		if ( IsReloading && Input.Pressed( InputButton.PrimaryAttack ) )
 			InterruptReload = true;
 		else if (!IsReloading && PumpAction )
-		{
 			PumpAction = false;
-		}
 	}
 	public override void AttackPrimary()
 	{
@@ -69,7 +70,7 @@ partial class Shotgun : BLWeaponsBase
 		//
 		// Shoot the bullets
 		//
-		ShootBullet( 0.2f, 0.3f, 20.0f, 2.0f, 4 );
+		ShootBullet( 0.5f, 0.75f, 20.0f, 1.5f, 4 );
 	}
 
 	public override void AttackSecondary()
@@ -103,9 +104,23 @@ partial class Shotgun : BLWeaponsBase
 
 		if ( Owner is BLPawn player )
 		{
+			
+			if ( player.AmmoCount( AmmoType ) - 1 <= 0)
+			{
+				var lastShell = player.TakeAmmo( AmmoType, 1 );
+
+				AmmoClip += lastShell;
+
+				IsReloading = false;
+				FinishReload();
+				return;
+			}
+			
 			var ammo = player.TakeAmmo( AmmoType, 1 );
+
 			if ( ammo == 0 )
 				return;
+
 
 			AmmoClip += ammo;
 
@@ -122,7 +137,7 @@ partial class Shotgun : BLWeaponsBase
 	{
 		if ( AmmoClip <= 0 )
 			PumpAction = true;
-
+		
 		base.Reload();
 	}
 
@@ -139,7 +154,6 @@ partial class Shotgun : BLWeaponsBase
 	protected virtual void FinishReload()
 	{
 		ViewModelEntity?.SetAnimParameter( "reload_finished", true );
-		//ViewModelEntity?.SetAnimParameter( "pump", false );
 	}
 
 	public override void SimulateAnimator( PawnAnimator anim )

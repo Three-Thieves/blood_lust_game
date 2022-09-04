@@ -46,4 +46,10 @@ public partial class BLGame
 
 		player.TakeDamage( dmgInfo );
 	}
+
+	[ConCmd.Admin("bl_round_restart")]
+	public static void CMD_RestartRound()
+	{
+		BLGame.Instance.EndRound(WinningEnum.Draw);
+	}
 }

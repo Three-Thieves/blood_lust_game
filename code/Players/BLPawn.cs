@@ -133,6 +133,9 @@ partial class BLPawn : Player
 		LifeState = LifeState.Alive;
 		Health = 25;
 
+		GiveHands();
+		Backpack.Add( new Fangs(), true );
+
 		if ( Corpse == null )
 			return;
 
@@ -323,7 +326,10 @@ partial class BLPawn : Player
 
 	public override void OnKilled()
 	{
-		base.OnKilled();
+		LifeState = LifeState.Dead;
+		StopUsing();
+
+		Client?.AddInt( "deaths", 1 );
 
 		EnableDrawing = false;
 		EnableAllCollisions = false;
@@ -333,12 +339,14 @@ partial class BLPawn : Player
 		else
 			CameraMode = new SpectatorCamera();
 
-		if(Backpack.Count() > 0)
-			Backpack.DropContents();
-
-		ClearAmmo();
-
 		BecomeRagdoll( lastDMGInfo.Force, lastDMGInfo.HitboxIndex );
+		
+		if ( CurTeam == BLTeams.Vampire )
+		{
+			timeUntilResurrection = timeToResurrect;
+		}
+
+		//ClearAmmo();
 
 		if(CurTeam == BLTeams.Human || CurTeam == BLTeams.Hunter)
 		{
@@ -346,10 +354,7 @@ partial class BLPawn : Player
 			BLGame.GameCurrent.CheckRoundStatus();
 		}
 
-		if ( CurTeam == BLTeams.Vampire )
-		{
-			timeUntilResurrection = timeToResurrect;
-		}
+		Backpack.DropContents();
 	}
 
 	public override void PostCameraSetup( ref CameraSetup setup )

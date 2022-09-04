@@ -73,6 +73,20 @@ partial class Fangs : BLWeaponsBase
 
 				damageInfo.Damage = 10.0f;
 
+				switch( tr.HitboxIndex )
+				{
+					case 3:
+						damageInfo.Damage += 15.0f;
+						break;
+					case 5:
+						damageInfo.Damage += 15.0f;
+						break;
+					case 7:
+						damageInfo.Damage += 15.0f;
+						break;
+				}
+
+
 				tr.Entity.TakeDamage( damageInfo );
 			}
 		}

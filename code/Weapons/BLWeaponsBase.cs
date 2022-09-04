@@ -15,6 +15,17 @@ public partial class BLWeaponsBase : BaseWeapon, IUse
 	public virtual int Order => (Bucket * 10000) + BucketWeight;
 	public virtual bool IsDroppable => true;
 
+	public enum SlotEnum
+	{
+		None,
+		Melee,
+		Secondary,
+		Primary,
+		Misc,
+	}
+
+	public virtual SlotEnum Slot => SlotEnum.None;
+
 	[Net, Predicted]
 	public int AmmoClip { get; set; }
 
@@ -176,6 +187,7 @@ public partial class BLWeaponsBase : BaseWeapon, IUse
 				var damageInfo = DamageInfo.FromBullet( tr.EndPosition, forward * 100 * force, damage )
 					.UsingTraceResult( tr )
 					.WithAttacker( Owner )
+					.WithHitbox( tr.HitboxIndex )
 					.WithWeapon( this );
 
 				tr.Entity.TakeDamage( damageInfo );
@@ -285,6 +297,12 @@ public partial class BLWeaponsBase : BaseWeapon, IUse
 		{
 			if ( player.Backpack.Contains( this ) )
 				return false;
+
+			foreach ( BLWeaponsBase item in player.Backpack.List )
+			{
+				if ( item.Slot == Slot )
+					return false;
+			}
 		}
 
 		return true;

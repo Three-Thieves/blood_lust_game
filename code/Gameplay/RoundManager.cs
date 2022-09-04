@@ -39,14 +39,11 @@ public partial class BLGame
 		var curHumans = GetTeamMembers( BLPawn.BLTeams.Human ).Count + GetTeamMembers(BLPawn.BLTeams.Hunter).Count;
 		var curVampire = GetTeamMembers( BLPawn.BLTeams.Vampire ).Count;
 	
-		if( GameState == GameStates.Active )
-		{
-			if ( curHumans <= 0 )
-				EndRound( WinningEnum.Vampires );
+		if ( curHumans <= 0 )
+			EndRound( WinningEnum.Vampires );
 			
-			if ( curVampire <= 0 )
-				EndRound( WinningEnum.Humanity );
-		}
+		if ( curVampire <= 0 )
+			EndRound( WinningEnum.Humanity );
 	}
 
 	[ClientRpc]
@@ -67,7 +64,7 @@ public partial class BLGame
 		{
 			x.Respawn();
 			x.GiveHands();
-			x.SetIdentity();
+			x.UpdatePlayerTeam( BLPawn.BLTeams.Spectator );
 		} );
 
 		Map.Reset( BLCleanupFilter );
@@ -169,7 +166,7 @@ public partial class BLGame
 	public void EndRound(WinningEnum winningTeam)
 	{
 		if(winningTeam == WinningEnum.Draw)
-			Log.Info( "Its a draw, this shouldn't happen" );
+			Log.Info( "Draw" );
 		else
 			Log.Info( $"{ winningTeam } win");
 

@@ -109,13 +109,23 @@ public partial class BLChat : Panel
 		if ( message.Contains( '\n' ) || message.Contains( '\r' ) )
 			return;
 
+		string identityName = "";
+
+		if( ConsoleSystem.Caller.Pawn is BLPawn consolePlayer)
+		{
+			identityName = consolePlayer.PlayerIdentity;
+			if ( consolePlayer.CurTeam == BLPawn.BLTeams.Spectator )
+				return;
+		}
+
 		if ( Local.Pawn is BLPawn player)
 		{
+			identityName = player.PlayerIdentity;
 			if ( player.CurTeam == BLPawn.BLTeams.Spectator )
 				return;
 		}
 
 		Log.Info( $"{ConsoleSystem.Caller}: {message}" );
-		AddChatEntry( To.Everyone, ConsoleSystem.Caller.Name, message, $"avatar:{ConsoleSystem.Caller.PlayerId}" );
+		AddChatEntry( To.Everyone, identityName, message );
 	}
 }

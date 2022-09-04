@@ -17,7 +17,7 @@ partial class Stake : BLWeaponsBase
 	public override int ClipSize => 0;
 	public override int BucketWeight => 200;
 	public override int Bucket => 0;
-
+	public override SlotEnum Slot => SlotEnum.Melee;
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -66,7 +66,7 @@ partial class Stake : BLWeaponsBase
 					ragdoll.IsStaked = true;
 
 				var ply = Owner as BLPawn;
-				ply.Backpack.GetSlot( ply.Backpack.GetActiveSlot() ).Delete();
+				ply.Backpack.StripWeapon( this );
 				return;
 			}
 		}

@@ -17,6 +17,7 @@ partial class Winchester : BLWeaponsBase
 	public override float ReloadTime => 1.5f;
 	public override int Bucket => 3;
 	public override int BucketWeight => 200;
+	public override SlotEnum Slot => SlotEnum.Primary;
 
 	[Net, Predicted]
 	public bool StopReloading { get; set; }
@@ -59,7 +60,7 @@ partial class Winchester : BLWeaponsBase
 		//
 		// Shoot the bullets
 		//
-		ShootBullet( 0.05f, 0.3f, 45.0f, 2.0f );
+		ShootBullet( 0.05f, 0.85f, 45.0f, 2.0f );
 	}
 
 	public override void AttackSecondary()
