@@ -13,6 +13,20 @@ public class EndResults : Panel
 	public Panel ResultPanel;
 	public Label WinnerResult;
 	public Label Players;
+	public Panel ResultsList;
+
+	public class PlayerResultsList : Panel
+	{
+		public Label _name;
+		public Label _ident;
+		public Label _lastTeam;
+		public PlayerResultsList(string name, string plrIdent, string plrLastTeam)
+		{
+			_name = Add.Label(name, "name");
+			_ident = Add.Label( plrIdent, "nameGame" );
+			_lastTeam = Add.Label( plrLastTeam, "ident" );
+		}
+	}
 
 	public EndResults()
 	{
@@ -22,6 +36,7 @@ public class EndResults : Panel
 		ResultPanel = Add.Panel();
 		WinnerResult = Add.Label( "Draw", "winnerText" );
 		Players = Add.Label( "???", "players" );
+		ResultsList = Add.Panel( "plrListEnd" );
 
 		_ = Lifetime();
 	}
@@ -40,6 +55,8 @@ public class EndResults : Panel
 
 		string playerList = "";
 
+		ResultsList.DeleteChildren();
+
 		foreach ( var cl in Client.All )
 		{
 			if ( cl.Pawn is BLPawn player )
@@ -47,7 +64,7 @@ public class EndResults : Panel
 				if ( player.LastTeam == BLPawn.BLTeams.Unknown )
 					continue;
 
-				playerList = playerList + cl.Name + " | " + player.PlayerIdentity + " | " + player.LastTeam + "\n"; 
+				ResultsList.AddChild( new PlayerResultsList( cl.Name , player.PlayerIdentity , player.LastTeam.ToString() ) );
 			}
 		}
 

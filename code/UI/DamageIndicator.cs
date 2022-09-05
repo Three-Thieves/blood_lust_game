@@ -8,20 +8,18 @@ public partial class DamageIndicator : Panel
 
 	public DamageIndicator()
 	{
+		StyleSheet.Load( "/UI/Styles/damageindicator.scss" );
 		Current = this;
 	}
-
 	public void OnHit()
 	{
 		var p = new HitPoint();
 		p.Parent = this;
 	}
-
 	public class HitPoint : Panel
 	{
 		public HitPoint()
 		{
-			StyleSheet.Load( "/UI/Styles/damageindicator.scss" );
 			_ = Lifetime();
 		}
 
