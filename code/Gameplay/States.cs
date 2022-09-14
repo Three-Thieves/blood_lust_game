@@ -23,7 +23,7 @@ public partial class BLGame : Game
 	public GameStates GameState { get; set; } = GameStates.Waiting;
 
 	[Net]
-	public string NextMap { get; set; } = "facepunch.construct";
+	public string NextMap { get; set; } = "theives.nightclub";
 
 	public enum GameStates
 	{
