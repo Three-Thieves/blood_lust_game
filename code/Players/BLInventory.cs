@@ -301,6 +301,5 @@ public partial class BLInventory : IBaseInventory
 		}
 
 		Active = null;
-		List.Clear();
 	}
 }

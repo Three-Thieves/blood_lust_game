@@ -87,7 +87,6 @@ public partial class RoundRoleTeller : Panel
 
 		int totalVamps = BLGame.Instance.GetTeamMembers(BLPawn.BLTeams.Vampire).Count();
 		int totalHunters = BLGame.Instance.GetTeamMembers( BLPawn.BLTeams.Hunter ).Count();
-
 		switch ( player.CurTeam )
 		{
 			case BLPawn.BLTeams.Human:
@@ -98,13 +97,19 @@ public partial class RoundRoleTeller : Panel
 
 			case BLPawn.BLTeams.Vampire:
 				RoleLbl.SetText( "You are a Vampire" );
-				NumTeams.SetText( $"You and {totalVamps-1} vampires are being hunted by {totalHunters} hunters" );
+				if ( (totalVamps - 1) <= 0)
+					NumTeams.SetText( $"You are a lone vampire, there are no hunters but you can still be destroyed" );
+				else 
+					NumTeams.SetText( $"You and {totalVamps-1} vampires are being hunted by {totalHunters} hunters" );
 				Advice.SetText( GetRandomAdvice( BLPawn.BLTeams.Vampire ) );
 				break;
 
 			case BLPawn.BLTeams.Hunter:
 				RoleLbl.SetText( "You are a Hunter" );
-				NumTeams.SetText( $"You and {totalHunters - 1} hunters must hunt {totalVamps} vampires" );
+				if ( (totalHunters - 1) <= 0)
+					NumTeams.SetText( $"You hunt alone, you must hunt down {totalVamps} vampires");
+				else
+					NumTeams.SetText( $"You and {totalHunters - 1} hunters must hunt {totalVamps} vampires" );
 				Advice.SetText( GetRandomAdvice( BLPawn.BLTeams.Hunter ) );
 				break;
 		}

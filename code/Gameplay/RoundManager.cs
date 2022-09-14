@@ -74,7 +74,11 @@ public partial class BLGame
 			x.UpdatePlayerTeam( BLPawn.BLTeams.Spectator );
 		} );
 
+
 		Map.Reset( BLCleanupFilter );
+
+		All.OfType<WeaponSpawnpoint>().ToList().ForEach( x => x.SpawnEntity() );
+		All.OfType<AmmoSpawnpoint>().ToList().ForEach( x => x.SpawnEntity() );
 
 		int vampLimit = Math.Abs( Client.All.Count / 6) + 1;
 		int hunterLimit = Math.Abs( Client.All.Count / 6 );
