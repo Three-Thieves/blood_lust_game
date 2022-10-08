@@ -14,9 +14,9 @@ public partial class BLGame
 		Vampires
 	}
 
-	public List<string> takenMaleNames;
-	public List<string> takenFemaleNames;
-	public List<string> takenHunterNames;
+	public static IList<string> TakenNames_Male = new List<string>();
+	public static IList<string> TakenNames_Female = new List<string>();
+	public static IList<string> TakenNames_Hunter = new List<string>();
 
 	MapVoteEntity mapVote;
 
@@ -59,9 +59,9 @@ public partial class BLGame
 
 	public void StartRound()
 	{
-		takenMaleNames.Clear();
-		takenFemaleNames.Clear();
-		takenHunterNames.Clear();
+		TakenNames_Male.Clear();
+		TakenNames_Female.Clear();
+		TakenNames_Hunter.Clear();
 
 		PlayGameplaySounds( To.Everyone, "roundstart" );
 
@@ -69,7 +69,6 @@ public partial class BLGame
 		{
 			MoveToSpawnpoint( x );
 			x.Respawn();
-			x.Backpack.DeleteContents();
 			x.GiveHands();
 			x.UpdatePlayerTeam( BLPawn.BLTeams.Spectator );
 		} );
@@ -176,7 +175,7 @@ public partial class BLGame
 
 		if ( GameState == GameStates.Post )
 		{
-			if ( CurRound > MaxRounds )
+			if ( CurRound > GameMaxRounds )
 			{
 				Log.Info( "ROUNDS EXCEED MAX, starting map vote" );
 				GameState = GameStates.MapVote;

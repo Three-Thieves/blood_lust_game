@@ -41,7 +41,8 @@ partial class Fangs : BLWeaponsBase
 		{
 			if ( !tr.Entity.IsValid() ) continue;
 
-			tr.Surface.DoBulletImpact( tr );
+			if( !tr.Entity.IsWorld )
+				tr.Surface.DoBulletImpact( tr );
 
 			hit = true;
 

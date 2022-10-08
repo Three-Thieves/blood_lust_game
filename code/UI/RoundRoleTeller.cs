@@ -85,8 +85,8 @@ public partial class RoundRoleTeller : Panel
 			return;
 		}
 
-		int totalVamps = BLGame.Instance.GetTeamMembers(BLPawn.BLTeams.Vampire).Count();
-		int totalHunters = BLGame.Instance.GetTeamMembers( BLPawn.BLTeams.Hunter ).Count();
+		int totalVamps = BLGame.GameCurrent.GetTeamMembers(BLPawn.BLTeams.Vampire).Count();
+		int totalHunters = BLGame.GameCurrent.GetTeamMembers( BLPawn.BLTeams.Hunter ).Count();
 		switch ( player.CurTeam )
 		{
 			case BLPawn.BLTeams.Human:

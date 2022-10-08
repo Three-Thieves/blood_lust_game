@@ -32,7 +32,7 @@
         "ladder": "Ignore",
         "water": "Trigger",
         "blweapon": "Collide",
-        "blplayer": "Collide",
+        "player": "Collide",
         "blitem": "Collide"
       },
       "Pairs": [
@@ -66,22 +66,12 @@
           "b": "blweapon"
         },
         {
-          "a": "blplayer",
-          "b": "blplayer",
-          "r": "Collide"
-        },
-        {
-          "a": "blweapon",
-          "b": "blplayer",
-          "r": "Ignore"
-        },
-        {
           "a": "blitem",
           "b": "blitem",
           "r": "Collide"
         },
         {
-          "a": "blplayer",
+          "a": "player",
           "b": "blitem",
           "r": "Ignore"
         },
@@ -89,6 +79,11 @@
           "a": "blweapon",
           "b": "blitem",
           "r": "Collide"
+        },
+        {
+          "a": "blweapon",
+          "b": "player",
+          "r": "Ignore"
         }
       ]
     },

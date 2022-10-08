@@ -16,24 +16,21 @@ public class BLHud : RootPanel
 
 		StyleSheet.Load( "/UI/Styles/blhud.scss" );
 
-		Current = this;
-
-		AddChild<DamageIndicator>();
-
-		//AddChild<BLChat>();
+		AddChild<BLChat>();
 
 		AddChild<Scoreboard<ScoreboardEntry>>();
 		AddChild<Vitals>();
 		AddChild<Crosshair>();
-		AddChild<BackpackBar>();
 		AddChild<RoundRoleTeller>();
 		AddChild<PlayerInfo>();
 
 		AddChild<DeathNotice>();
-
-		AddChild<ChatBox>();
+		AddChild<BackpackBar>();
+		//AddChild<ChatBox>();
 		AddChild<VoiceSpeaker>();
 		AddChild<VoiceList>();
+
+		Current = this;
 	}
 
 	public override void Tick()

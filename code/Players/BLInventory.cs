@@ -53,7 +53,10 @@ public partial class BLInventory : IBaseInventory
 		Host.AssertServer();
 
 		foreach ( var item in List.ToArray() )
+		{
+			item.Parent = null;
 			item.Delete();
+		}
 
 		List.Clear();
 	}
@@ -273,9 +276,7 @@ public partial class BLInventory : IBaseInventory
 		List.Add( ent );
 
 		if ( makeActive )
-		{
 			SetActive( ent );
-		}
 
 		return true;
 	}
@@ -283,22 +284,20 @@ public partial class BLInventory : IBaseInventory
 
 	public void DropContents()
 	{
-		if ( !Host.IsServer )
-			return;
+		Host.AssertServer();
 
-		foreach ( var item in List )
+		foreach ( BLWeaponsBase item in List )
 		{
-			if ( !Contains( item ) )
-				return;
-
-			if( item is BLWeaponsBase wep && !wep.IsDroppable )
+			if( !item.IsDroppable )
 				continue;
 
 			item.Parent = null;
 
 			if ( item is BaseCarriable bc )
-				bc.OnCarryDrop( Owner ); 
+				bc.OnCarryDrop( Owner );
 		}
+
+		List.Clear();
 
 		Active = null;
 	}

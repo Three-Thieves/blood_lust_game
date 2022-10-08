@@ -14,12 +14,13 @@ partial class BLPawn : Player
 	public TimeUntil TimeUntilResurrect { get; set; }
 	public TimeSince TimeSinceDamage { get; private set; } = 1.0f;
 
-	float timeToResurrect = 15.0f;
+	[Net]
+	public float TimeToResurrect { get; set; } = 15.0f;
 
 	Sound nearDeathSnd;
 
 	[Net]
-	public float MaxHealth { get; set; } = 100;
+	public float MaxHealth { get; set; } = 100.0f;
 
 	public BLInventory Backpack { get; protected set; }
 
@@ -33,9 +34,9 @@ partial class BLPawn : Player
 		Host.AssertServer();
 
 		CreateHull();
-		oldClothing = new List<ModelEntity>();
+		OldClothing = new List<ModelEntity>();
 
-		Tags.Add( "blplayer" );
+		Tags.Add( "player" );
 		EnableLagCompensation = true;
 
 		SetModel( "models/citizen/citizen.vmdl" );
@@ -90,6 +91,13 @@ partial class BLPawn : Player
 		Velocity = Vector3.Zero;
 		WaterLevel = 0;
 
+		foreach ( BLWeaponsBase oldItem in Backpack.List.ToArray())
+		{
+			oldItem.Parent = null;
+			Backpack.List.Remove( oldItem );
+			oldItem.Delete();
+		}
+
 		CreateHull();
 		ClearAmmo();
 
@@ -118,6 +126,7 @@ partial class BLPawn : Player
 			EnableAllCollisions = true;
 		}
 
+		Backpack.DeleteContents();
 		Skills.Clear();
 	}
 
@@ -177,7 +186,10 @@ partial class BLPawn : Player
 			SimulateNearDeath( To.Single( this ), Health > 0 && Health <= 30.0f );
 
 		if ( Input.Pressed( InputButton.Drop ) )
-		{	
+		{
+			if ( Backpack.Active is BLWeaponsBase wep && !wep.IsDroppable )
+				return;
+
 			var dropped = Backpack.DropActive();
 
 			if ( dropped != null )
@@ -234,23 +246,7 @@ partial class BLPawn : Player
 
 	public override void StartTouch( Entity other )
 	{
-
-		if ( BLGame.CurrentState != BLGame.GameStates.Active )	return;
-
-		if ( timeSinceDropped < 1 ) return;
-
-		if ( other is BLWeaponsBase wep )
-		{
-			if ( wep is HunterStake && CurTeam == BLTeams.Vampire )
-				return;
-
-			if ( wep is Stake && CurTeam == BLTeams.Hunter )
-				return;
-
-			Backpack.Add( wep );
-		}
-
-		base.StartTouch(other);
+		
 	}
 
 	void BecomeRagdoll( Vector3 force, int forceBone )
@@ -356,8 +352,8 @@ partial class BLPawn : Player
 
 	public override void OnKilled()
 	{
-		LifeState = LifeState.Dead;
 		StopUsing();
+		Backpack.DropContents();
 
 		Client?.AddInt( "deaths", 1 );
 
@@ -372,9 +368,7 @@ partial class BLPawn : Player
 		BecomeRagdoll( lastDMGInfo.Force, lastDMGInfo.HitboxIndex );
 		
 		if ( CurTeam == BLTeams.Vampire )
-		{
-			TimeUntilResurrect = timeToResurrect;
-		}
+			TimeUntilResurrect = TimeToResurrect;
 
 		//ClearAmmo();
 
@@ -382,10 +376,10 @@ partial class BLPawn : Player
 		{
 			UpdatePlayerTeam( BLTeams.Spectator );
 			BLGame.GameCurrent.CheckRoundStatus();
+			LifeState = LifeState.Dead;
+			Backpack.DeleteContents();
 		}
 
-		Backpack.DropContents();
-		//Backpack.DeleteContents();
 	}
 
 	public override void PostCameraSetup( ref CameraSetup setup )

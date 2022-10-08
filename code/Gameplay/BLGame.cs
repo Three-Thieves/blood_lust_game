@@ -1,5 +1,6 @@
 ﻿
 using Sandbox;
+using Sandbox.Effects;
 using Sandbox.UI.Construct;
 using System;
 using System.IO;
@@ -8,24 +9,21 @@ using System.Threading.Tasks;
 
 public partial class BLGame : Game
 {
-	public static BLGame Instance { get; private set; } = Current as BLGame;
+
+/*	[ConVar.Replicated("bl_maxrounds")]
+	public static int MaxRounds { get; set; }*/
 
 	public BLGame()
 	{
 		if(IsServer)
 		{
-			takenMaleNames = new();
-			takenFemaleNames = new();
-			takenHunterNames = new();
-
-			MaxRounds = 8;
+			GameMaxRounds = 8;
 		}
 
 		if(IsClient)
 		{
 			_ = new BLHud();
-			postProcess = new StandardPostProcess();
-			PostProcess.Add( postProcess );
+			postProcess = new ScreenEffects();
 		}
 	}
 
@@ -40,10 +38,10 @@ public partial class BLGame : Game
 		if ( IsClient )
 		{
 			_ = new BLHud();
-			PostProcess.Remove( postProcess );
+			/*PostProcess.Remove( postProcess );
 
 			postProcess = new StandardPostProcess();
-			PostProcess.Add( postProcess );
+			PostProcess.Add( postProcess );*/
 		}
 	}
 

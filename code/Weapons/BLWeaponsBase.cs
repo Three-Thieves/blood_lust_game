@@ -201,7 +201,7 @@ public partial class BLWeaponsBase : BaseWeapon, IUse
 
 		var trace = Trace.Ray( start, end )
 				.UseHitboxes()
-				.WithAnyTags( "solid", "blplayer" )
+				.WithAnyTags( "solid", "player" )
 				.Ignore( this )
 				.Size( radius );
 
@@ -290,7 +290,7 @@ public partial class BLWeaponsBase : BaseWeapon, IUse
 
 	public bool IsUsable( Entity user )
 	{
-		if ( BLGame.CurrentState != BLGame.GameStates.Active )
+		if ( BLGame.GameCurrent.GameState != BLGame.GameStates.Active )
 			return false;
 
 		if(user is BLPawn player)

@@ -16,19 +16,14 @@ public abstract partial class BLBaseSkill : EntityComponent<BLPawn>
 	public virtual BLBaseSkill RequiredSkill => null;
 	public virtual int TierLevel => 0;
 
-	[Net, Local]
-	public bool ActiveSkill { get; set; } = false;
-
 	public virtual void Simulate(Client cl)
 	{
-		if ( !ActiveSkill )
-			return;
+		
 	}
 
 	public virtual void OnActivate(BLPawn player)
 	{
 		player.BloodSkillPoints--;
-		ActiveSkill = true;
 
 		player.Skills.Add( this );
 	}
@@ -39,7 +34,6 @@ public abstract partial class BLBaseSkill : EntityComponent<BLPawn>
 			return;
 
 		OnActivate( player );
-		
 	}
 
 	public bool CanObtain( BLPawn player )
@@ -51,9 +45,6 @@ public abstract partial class BLBaseSkill : EntityComponent<BLPawn>
 			return false;
 
 		if ( player.Skills.Contains( this ) )
-			return false;
-
-		if ( ActiveSkill )
 			return false;
 
 		return true;

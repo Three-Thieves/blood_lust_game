@@ -42,7 +42,9 @@ public class Vitals : Panel
 		Border.SetClass( "human", player.CurTeam == BLPawn.BLTeams.Human || player.CurTeam == BLPawn.BLTeams.Hunter );
 		Border.SetClass( "vampire", player.CurTeam == BLPawn.BLTeams.Vampire );
 
-		Bar.Style.Height = Length.Percent( player.Health.CeilToInt() );
+		float health = player.Health / player.MaxHealth * 100.0f;
+
+		Bar.Style.Height = Length.Percent( health.CeilToInt() );
 
 		Blood.SetClass( "isVampire", player.CurTeam == BLPawn.BLTeams.Vampire );
 		BloodBar.Style.Height = Length.Pixels( player.BloodBar );

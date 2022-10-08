@@ -35,7 +35,7 @@ public class BackpackBar : Panel
 		if ( player == null ) return;
 
 		Weapons.Clear();
-		Weapons.AddRange( player.Children.Select( x => x as BLWeaponsBase ).Where( x => x.IsValid() ) );
+		Weapons.AddRange( player.Children.Select( x => x as BLWeaponsBase ).Where( x => x.IsValid() && !player.Backpack.Contains(x) ) );
 
 		foreach ( var weapon in Weapons )
 		{
@@ -53,7 +53,7 @@ public class BackpackBar : Panel
 		if ( BLGame.CurrentState != BLGame.GameStates.Active ) return;
 
 		bool wantOpen = IsOpen;
-		var localPlayer = Local.Pawn as Player;
+		var localPlayer = Local.Pawn as BLPawn;
 
 		// If we're not open, maybe this input has something that will 
 		// make us want to start being open?

@@ -26,14 +26,14 @@ public partial class BLPawn
 
 	public void SetUpVampire()
 	{
+		MaxHealth = 100.0f;
+
 		BloodBar = 128.0f;
 		BloodSkillPoints = 0;
 		BloodLevel = 1;
 
-		var fangs = new Fangs();
-
-		Backpack.Add( fangs );
-		//TODO: Skills
+		Backpack.Add( new Fangs() );
+		Skills.Clear();
 	}
 
 	public void SimulateVampire()
@@ -63,10 +63,12 @@ public partial class BLPawn
 
 		var stakedBody = Corpse as BLRagdoll;
 
-		CameraMode = new DevCamera();
+		CameraMode = new SpectatorCamera();
 
 		stakedBody.IsStaked = true;
 		CurTeam = BLTeams.Spectator;
+
+		stakedBody.CorpseOwner.LifeState = LifeState.Dead;
 
 		BLGame.GameCurrent.CheckRoundStatus();
 
