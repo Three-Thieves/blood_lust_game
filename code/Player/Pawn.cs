@@ -91,8 +91,11 @@ public partial class BloodPawn : AnimatedEntity
 
 		SetModel( "models/citizen/citizen.vmdl" );
 		SetUpHull();
+		SetBasicStats();
 		MoveToSpawnpoint();
 		SetUpController();
+
+		Components.Create<BloodInventory>();
 
 		ClientRespawn( To.Single( Client ) );
 
@@ -182,5 +185,16 @@ public partial class BloodPawn : AnimatedEntity
 
 		// Simulate our active weapon if we can.
 		Inventory?.FrameSimulate( cl );
+	}
+
+	public TraceResult GetEyeTrace( float dist = 25.0f, float size = 1.0f )
+	{
+		var tr = Trace.Ray( EyePosition, EyePosition + EyeRotation.Forward * dist )
+			.Ignore( this )
+			.UseHitboxes( true )
+			.Size( size )
+			.Run();
+
+		return tr;
 	}
 }

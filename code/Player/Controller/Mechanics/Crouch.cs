@@ -14,7 +14,7 @@ public partial class CrouchMechanic : PlayerControllerMechanic
 	protected override bool ShouldStart()
 	{
 		if ( !Input.Down( InputButton.Duck ) ) return false;
-		if ( !Controller.GroundEntity.IsValid() ) return false;
+		//if ( !Controller.GroundEntity.IsValid() ) return false;
 
 		return true;
 	}

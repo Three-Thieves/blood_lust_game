@@ -6,6 +6,7 @@ namespace BloodLust.Weapons;
 
 public partial class WeaponViewModel
 {
+
 	// Fields
 	Vector3 SmoothedVelocity;
 	Vector3 velocity;
@@ -94,15 +95,23 @@ public partial class WeaponViewModel
 		var speed = controller.Velocity.Length.LerpInverse( 0, 750 );
 		var sideSpeed = controller.Velocity.Length.LerpInverse( 0, 350 );
 		var bobSpeed = SmoothedVelocity.Length.LerpInverse( -250, 700 );
+		//var isSprinting = controller.IsMechanicActive<SprintMechanic>();
 		var left = Camera.Rotation.Left;
 		var up = Camera.Rotation.Up;
 		var forward = Camera.Rotation.Forward;
 		var isCrouching = controller.IsMechanicActive<CrouchMechanic>();
+		//var isAiming = Weapon.GetComponent<Aim>()?.IsActive ?? false;
+		//var isSliding = controller.IsMechanicActive<SlideMechanic>();
+		//var timeSinceFired = Weapon.GetComponent<PrimaryFire>().TimeSinceActivated;
 
-		//LerpTowards( ref aimLerp, isAiming ? 1 : 0, isAiming ? 30f : 10f );
+		LerpTowards( ref aimLerp, 0, 10f );
+		//LerpTowards( ref sprintLerp, isSprinting ? 1 : 0, 10f );
 		//LerpTowards( ref burstSprintLerp, burstSprint && !sliding ? 1 : 0, 8f );
 
-		//LerpTowards( ref crouchLerp, isCrouching && !isAiming ? 1 : 0, 7f );
+		LerpTowards( ref crouchLerp, isCrouching ? 1 : 0, 7f );
+
+		//LerpTowards( ref crouchLerp, isCrouching && !isAiming && !isSliding ? 1 : 0, 7f );
+		//LerpTowards( ref slideLerp, isSliding ? ((float)timeSinceFired).Remap( 0.35f, 0.65f, 0, 1 ).Clamp( 0, 1 ) : 0, 7f );
 		LerpTowards( ref airLerp, (isGrounded ? 0 : 1) * (1 - aimLerp), 10f );
 		//LerpTowards( ref speedLerp, (aim || sliding || sprint) ? 0.0f : speed, 10f );
 		//LerpTowards( ref vaultLerp, (vaulting) ? 1.0f : 0.0f, 10f );
@@ -122,27 +131,22 @@ public partial class WeaponViewModel
 
 		walkBob %= 360;
 
-		var mouseDeltaX = -Input.MouseDelta.x * Time.Delta;
-		var mouseDeltaY = -Input.MouseDelta.y * Time.Delta;
+		var mouseDeltaX = -Input.MouseDelta.x * Time.Delta * 2;
+		var mouseDeltaY = -Input.MouseDelta.y * Time.Delta * 2;
 
 		acceleration += Vector3.Left * mouseDeltaX * -1f;
 		acceleration += Vector3.Up * mouseDeltaY * -2f;
-		//acceleration += -velocity * Data.WeightReturnForce * Time.Delta;
+		acceleration += -velocity * 2 * Time.Delta;
 
 		// Apply horizontal offsets based on walking direction
 		var horizontalForwardBob = WalkCycle( 0.5f, 3f ) * speed * Time.Delta;
 
 		acceleration += forward.WithZ( 0 ).Normal.Dot( controller.Velocity.Normal ) * Vector3.Forward * horizontalForwardBob;
 
-		// Apply left bobbing and up/down bobbing
-		acceleration += Vector3.Left * WalkCycle( 0.5f, 2f ) * speed * (1 + sprintLerp) * (1 - aimLerp) * Time.Delta;
-		acceleration += Vector3.Up * WalkCycle( 0.5f, 2f, true ) * speed * (1 - aimLerp) * Time.Delta;
-		acceleration += left.WithZ( 0 ).Normal.Dot( controller.Velocity.Normal ) * Vector3.Left * speed * Time.Delta * (1 - aimLerp);
-
 		velocity += acceleration * Time.Delta;
 
-		//ApplyDamping( ref acceleration, Data.AccelerationDamping );
-		//ApplyDamping( ref velocity, Data.WeightDamping * (1 + aimLerp) );
+		ApplyDamping( ref acceleration, 2.5f );
+		ApplyDamping( ref velocity, 2 * (1 + aimLerp) );
 		velocity = velocity.Normal * Math.Clamp( velocity.Length, 0, VelocityClamp );
 
 		var avoidanceTrace = Trace.Ray( Camera.Position, Camera.Position + forward * 50f )
@@ -157,18 +161,20 @@ public partial class WeaponViewModel
 
 		LerpTowards( ref avoidance, avoidanceVal, 10f );
 
-		Position = Camera.Position;
-		Rotation = Camera.Rotation;
+		Position = player.EyePosition;
+		Rotation = player.EyeRotation;
 
 		positionOffsetTarget = Vector3.Zero;
 		rotationOffsetTarget = Rotation.Identity;
 
 		{
+			float velocityScale = 0.5f;
+
 			// Global
-			/*rotationOffsetTarget *= Rotation.From( Data.GlobalAngleOffset );
-			positionOffsetTarget += forward * (velocity.x * Data.VelocityScale + Data.GlobalPositionOffset.x);
-			positionOffsetTarget += left * (velocity.y * Data.VelocityScale + Data.GlobalPositionOffset.y);
-			positionOffsetTarget += up * (velocity.z * Data.VelocityScale + Data.GlobalPositionOffset.z + upDownOffset);*/
+			//rotationOffsetTarget *= Rotation.From( Data.GlobalAngleOffset );
+			positionOffsetTarget += forward * velocity.x * velocityScale;
+			//positionOffsetTarget += left * velocity.y * velocityScale;
+			positionOffsetTarget += up * velocity.z * velocityScale / 2;
 
 			float cycle = Time.Now * 10.0f;
 			float sideCycle = Time.Now * 5f;
@@ -184,7 +190,7 @@ public partial class WeaponViewModel
 			Camera.Rotation *= Rotation.From(
 				new Angles(
 					MathF.Abs( Sandbox.Utility.Easing.QuadraticIn( MathF.Sin( sideCycle ) ) * 0.5f ),
-					Sandbox.Utility.Easing.QuadraticIn( MathF.Cos( sideCycle )  ) * 5f,
+					Sandbox.Utility.Easing.QuadraticIn( MathF.Cos( sideCycle ) ) * 5f,
 					0
 				) * rightAmount * -3f );
 
@@ -230,8 +236,8 @@ public partial class WeaponViewModel
 				rotationOffsetTarget *= Rotation.From( Data.SlideAngleOffset * slideLerp );
 				ApplyPositionOffset( Data.SlidePositionOffset, slideLerp );
 			}
-			else*/
-				rotationOffsetTarget *= slideRotationOffset;
+			else
+				rotationOffsetTarget *= slideRotationOffset;*/
 
 			Camera.Rotation *= slideRotationOffset;
 			Camera.FieldOfView += 5f * slideLerp;

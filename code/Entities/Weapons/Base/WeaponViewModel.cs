@@ -38,7 +38,7 @@ public partial class WeaponViewModel : AnimatedEntity
 		if ( Game.IsRunningInVR )
 			return;
 
-		Camera.Main.SetViewModelCamera( 80f, 1, 500 );
+		//Camera.Main.SetViewModelCamera( 80f, 1, 500 );
 		AddEffects();
 	}
 

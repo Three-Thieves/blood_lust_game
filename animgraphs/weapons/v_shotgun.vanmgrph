@@ -360,7 +360,7 @@
 							m_bIsEndtState = false
 							m_bIsPassthrough = false
 							m_bIsRootMotionExclusive = false
-							m_bAlwaysEvaluate = true
+							m_bAlwaysEvaluate = false
 						},
 						{
 							_class = "CAnimState"
@@ -920,7 +920,7 @@
 		[
 			{
 				_class = "CBoolAnimParameter"
-				m_name = "fire"
+				m_name = "b_fire"
 				m_id = 
 				{
 					m_id = 889976766
@@ -934,7 +934,7 @@
 			},
 			{
 				_class = "CBoolAnimParameter"
-				m_name = "reload"
+				m_name = "b_reload"
 				m_id = 
 				{
 					m_id = 1573520898
@@ -948,7 +948,7 @@
 			},
 			{
 				_class = "CBoolAnimParameter"
-				m_name = "reload_finished"
+				m_name = "b_reload_finished"
 				m_id = 
 				{
 					m_id = 691219820
@@ -962,7 +962,7 @@
 			},
 			{
 				_class = "CBoolAnimParameter"
-				m_name = "pump"
+				m_name = "b_pump"
 				m_id = 
 				{
 					m_id = 1088289321

@@ -12,7 +12,7 @@ public partial class WalkMechanic : PlayerControllerMechanic
 	public float StepSize => 18.0f;
 	public float GroundAngle => 46.0f;
 	public float DefaultSpeed => 280f;
-	public float WalkSpeed => 140f;
+	public float WalkSpeed => 180f;
 	public float GroundFriction => 4.0f;
 	public float MaxNonJumpVelocity => 140.0f;
 	public float SurfaceFriction { get; set; } = 1f;
