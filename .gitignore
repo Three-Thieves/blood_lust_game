@@ -9,9 +9,12 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.generated.*
+
+# S&Box files
 *.vtex_c
-*.vmat_c
+*.vmdl_c
+*.generated.*
+*.vsnd_c
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -100,7 +103,6 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
-&.csproj
 
 # Chutzpah Test files
 _Chutzpah*
@@ -400,3 +402,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+*.csproj
